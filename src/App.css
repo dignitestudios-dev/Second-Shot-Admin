@@ -1,0 +1,221 @@
+/* All the Global CSS code goes here */
+
+
+.auth-bg {
+    background: url("/sideimgauth");
+    background-repeat: none;
+    background-size: cover;
+    background-position: center;
+}
+
+.bg-grad-button {
+    background: rgb(1, 44, 87);
+    background: linear-gradient(230.2deg, #012c57 17.65%, #061523 129%);
+}
+
+.react-datepicker__day--selected {
+    background-color: #002c56 !important;
+    color: white !important;
+    border-radius: 50%;
+}
+
+.react-datepicker__day--keyboard-selected {
+    background-color: #002c56 !important;
+    color: white !important;
+
+}
+
+.react-datepicker__day .react-datepicker__day--008 .react-datepicker__day--keyboard-selected {
+    color: white !important;
+}
+
+.react-datepicker__day--weekend {
+    color: red !important;
+}
+
+.react-datepicker__header {
+    background-color: white !important;
+    border-bottom: none !important;
+}
+
+.react-datepicker__navigation--previous {
+    left: -10px !important;
+}
+
+h2.react-datepicker__current-month {
+    text-align: center !important;
+    font-size: 16px !important;
+    margin-top: 10px !important;
+    font-weight: 700 !important;
+    position: relative !important;
+    top: -4px !important;
+}
+
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow,
+.react-datepicker__navigation-icon::before {
+    border-color: black !important;
+    border-style: solid;
+    border-width: 3px 3px 0 0;
+    content: "";
+    display: block;
+    height: 9px;
+    position: absolute;
+    top: 14px !important;
+    width: 9px;
+}
+
+.react-datepicker__navigation--next {
+    left: 210px !important;
+
+    color: black !important;
+    right: 0px;
+}
+
+.react-datepicker__day-name {
+    color: #3c3c4399 !important;
+}
+
+.react-datepicker__day-name {
+    color: #8b8b8b;
+}
+
+
+  
+  
+  
+  
+  
+  
+  
+
+  .date-input,
+  .time-input {
+    position: relative;
+    
+  }
+  
+  .calendar-icon,
+  .clock-icon {
+    position: absolute;
+    right: 0px;
+    left: 6px;
+    top: 50%;
+   
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+  }
+  
+  .btn:active {
+    transform: scale(0.98);
+  }
+  
+  .btn-primary {
+    background-color: #0a192f;
+    color: white;
+  }
+  
+  .btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0e2240;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* Time picker modal */
+  .time-picker-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 393px;
+    height: 270px;
+    z-index: 1000;
+  }
+  
+  .time-picker-header {
+    padding: 15px;
+    text-align: right;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+  }
+  
+  .time-picker-content {
+    padding: 20px;
+  }
+  
+  .time-columns {
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    overflow-y: auto;
+  }
+  
+  .time-column {
+    flex: 1;
+    text-align: center;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .time-column::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  .time-item {
+    padding: 10px 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 18px;
+ 
+  }
+  
+  .time-item:hover {
+    color: #333;
+  }
+  
+  .time-item.selected {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .time-picker-footer {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid #f0f0f0;
+  }
+  
