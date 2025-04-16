@@ -7,8 +7,8 @@ export const baseUrl = "https://necessi.erdumadnan.com/api";
 // export const baseUrl = "https://155e-45-199-187-86.ngrok-free.app";
 
 async function getDeviceFingerprint() {
-  const fp = await FingerprintJS.load();
-  const result = await fp.get();
+  const fp =  FingerprintJS.load();
+  const result =  fp.get();
   console.log(result.visitorId); // Unique device ID
   return result.visitorId;
 }
