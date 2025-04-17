@@ -38,10 +38,10 @@ importScripts(
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCRiWBgbyt3TdyD_WhIO3c82FpfYuR_uf8",
-  authDomain: "rentibles-app.firebaseapp.com",
-  projectId: "rentibles-app",
-  storageBucket: "rentibles-app.firebasestorage.app",
+  apiKey: "ss",
+  authDomain: "ss",
+  projectId: "ss",
+  storageBucket: "ss",
   messagingSenderId: "366992554576",
   appId: "1:366992554576:web:8c8781df54b276fc1eef55",
   measurementId: "G-V0F642L156",
