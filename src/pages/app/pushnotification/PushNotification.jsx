@@ -3,9 +3,14 @@ import { FilterIcon, SearchIcon } from "../../../assets/export";
 import NotificationTable from "../../../components/app/pushnotification/NotificationTable";
 import { useNavigate } from "react-router";
 import Filter from "../../../components/global/Filter";
+import { useGetNotification } from "../../../hooks/api/Get";
 
 const PushNotification = () => {
   const navigate = useNavigate();
+  const { data, loading } = useGetNotification(
+    `/api/admin/notifications`,
+  
+  );
   return (
     <div className="bg-white rounded-[20px] p-3">
       <div className=" flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -37,7 +42,7 @@ const PushNotification = () => {
           </div>
         </div>
       </div>
-      <NotificationTable />
+      <NotificationTable data={data} loading={loading} />
     </div>
   );
 };

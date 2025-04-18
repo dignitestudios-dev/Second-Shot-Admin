@@ -3,6 +3,7 @@ import { IoMdClose } from "react-icons/io";
 import { LogoutIcon, SideBarLogo } from "../../assets/export";
 import { sidebarData } from "../../static/Sidebar";
 
+
 const Sidebaar = ({ toggleModal, setIsOpen }) => {
   const location = useLocation();
 

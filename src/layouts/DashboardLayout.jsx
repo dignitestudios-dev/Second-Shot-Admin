@@ -1,16 +1,17 @@
 import { Outlet } from "react-router";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import NoInternetModal from "../components/global/NoInternet";
 import Navbar from "../components/layout/Navbar";
 import Sidebaar from "../components/layout/Sidebar";
-// import LogOutModal from "../components/authentication/LogOutModal";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import LogoutModal from "../components/app/logout/LogoutModal";
-// import LogOutModal from "../components/authentication/LogOutModal";
+import { AuthContext } from "../context/AuthContext";
+
 
 const DashboardLayout = () => {
   const [openNoInternet, setOpenNoInternet] = useState(false);
   const sidebarRef = useRef(null);
+  const { logout } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
   const [isLog, setIsLog] = useState(false);
   const toggleModal = () => setIsOpen((prev) => !prev);
@@ -51,7 +52,11 @@ const DashboardLayout = () => {
         </div>
         <div className="p-4  overflow-auto h-full appFont  mx-6 bg-[#f5f7f7]">
           <NoInternetModal isOpen={openNoInternet} />
-          <LogoutModal showModal={isLog} handleClose={()=>setIsLog(false)} />
+          <LogoutModal
+            showModal={isLog}
+            handleClose={() => setIsLog(false)}
+            handleLogOut={() => logout()}
+          />
           <Outlet />
         </div>
       </div>

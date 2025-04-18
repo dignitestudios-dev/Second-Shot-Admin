@@ -25,7 +25,7 @@ export const Approutes = [
     ispublic: true,
   },
   {
-    url: "user-detail",
+    url: "user-detail/:id",
     title: "user-detail",
     page: <UserDetail />,
     ispublic: true,

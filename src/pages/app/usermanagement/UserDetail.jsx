@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { SearchIcon, Usersprofile, Youtube } from "../../../assets/export";
 
 import GoalsCard from "../../../components/app/usermanagement/Goals";
 import CarrersCards from "../../../components/app/usermanagement/CarrersCards";
 import ResumeFile from "../../../components/app/usermanagement/ResumeFile";
 import TrasnferableSkills from "../../../components/app/usermanagement/TrasnferableSkills";
+import { phoneFormater } from "../../../lib/helpers";
 
 const UserDetail = () => {
   const navigate = useNavigate();
@@ -14,9 +15,15 @@ const UserDetail = () => {
   const buttons = ["All", "Not started yet", "In Progress", "Completed"];
   const tabs = ["Transferable Skills", "Goals", "Careers", "Resume"];
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const { state } = useLocation();
+  const { user } = state || {};
+
   return (
     <div>
-      <div className="flex items-center gap-1" onClick={() => navigate(-1)}>
+      <div
+        className="flex items-center gap-1 cursor-pointer"
+        onClick={() => navigate(-1)}
+      >
         <IoIosArrowRoundBack size={17} />
         <p className="text-[14px] font-[400] text-[#202224] ">Back</p>
       </div>
@@ -28,14 +35,16 @@ const UserDetail = () => {
       <div className="bg-[#FFFFFF] rounded-[12px] p-5 mt-5 grid grid-cols-1 md:grid-cols-3 items-center gap-5 ">
         <div className="flex items-center gap-5 col-span-1">
           <img
-            src={Usersprofile}
+            src={user?.profile_img || "https://placehold.co/400"}
             alt="Profile"
             className="w-[108px] h-[108px] rounded-full border border-gray-300"
           />
           <div>
-            <h2 className="text-[32px] font-[600] text-[#0F0F0F]">John Doe</h2>
+            <h2 className="text-[32px] font-[600] text-[#0F0F0F]">
+              {user?.name}
+            </h2>
             <p className="text-gray-500 text-[16px] font-[500]">
-              john.doe@gmail.com
+              {user?.email}
             </p>
           </div>
         </div>
@@ -43,21 +52,23 @@ const UserDetail = () => {
         <div className="flex justify-start md:justify-center gap-40 col-span-2">
           <div>
             <p className="text-[#565656] text-[16px]">Phone Number</p>
-            <p className="text-[16px] font-medium text-[#0F0F0F]">
-              +000 0000 000
+            <p className="text-[16px] font-medium text-[#0F0F0F] text-nowrap">
+              +1 {phoneFormater(user?.phone)}
             </p>
           </div>
           <div>
             <p className="text-[#565656] text-[16px]">Location</p>
-            <p className="text-[16px] font-medium text-[#0F0F0F]">
-              Toronto, Canada
+            <p className="text-[16px] font-medium text-[#0F0F0F] text-nowrap">
+              {user.city},{user.state}
             </p>
           </div>
           <div>
-            <p className="text-[#565656] text-[16px]">Subscription</p>
-            <p className="text-[16px] font-medium text-[#0F0F0F]">
+            <p className="text-[#565656] text-[16px] ">Subscription</p>
+            <p className="text-[16px] font-medium text-[#0F0F0F] text-nowrap">
               Path Finder Plus/{" "}
-              <span className="text-[#565656] text-[12px]">3 months</span>
+              <span className="text-[#565656] text-[12px] ">
+                {user?.current_subscription_plan || "No Subscription"}
+              </span>
             </p>
           </div>
         </div>

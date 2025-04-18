@@ -24,11 +24,9 @@ const Login = () => {
           email: values?.email,
           password: values?.password,
         };
-        postData("/admin/login", false, null, data, processLogin);
-        navigate("/app/home");
-        // Use the loading state to show loading spinner
-        // Use the response if you want to perform any specific functionality
-        // Otherwise you can just pass a callback that will process everything
+        postData("/api/auth/admin/login", false, null, data, processLogin);
+        
+       
       },
     });
 
@@ -88,7 +86,7 @@ const Login = () => {
                 </NavLink>
               </div>
 
-              <Button text={"Sign In"} type={"submit"} />
+              <Button text={"Sign In"} type={"submit"} loading={loading} />
             </form>
           </div>
           <img

@@ -6,27 +6,35 @@ import UpdatePassModal from "../../../components/app/updatepassword/UpdatePassMo
 import { useFormik } from "formik";
 import { updatePasswordSchema } from "../../../schema/authentication/UpdatePasswordSchema";
 import { UpdatePasswordValues } from "../../../init/authentication/UpdatePasswordValues";
+import { processUpdatePassword } from "../../../lib/utils";
+import { useUpdatePassword } from "../../../hooks/api/Post";
 
 const UpdatePassword = () => {
+  const { loading, postData } = useUpdatePassword();
   const [open, setOpen] = useState(false);
-    const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
-      useFormik({
-        initialValues: UpdatePasswordValues,
-        validationSchema: updatePasswordSchema,
-        validateOnChange: true,
-        validateOnBlur: true,
-        onSubmit: async (values, action) => {
-          const data = {
-            email: values?.email,
-            password: values?.password,
-          };
-          // postData("/admin/login", false, null, data, processLogin);
-          setOpen(true)
-          // Use the loading state to show loading spinner
-          // Use the response if you want to perform any specific functionality
-          // Otherwise you can just pass a callback that will process everything
-        },
-      });
+  const { values, handleBlur, handleChange, handleSubmit, errors, touched,resetForm } =
+    useFormik({
+      initialValues: UpdatePasswordValues,
+      validationSchema: updatePasswordSchema,
+      validateOnChange: true,
+      validateOnBlur: true,
+      onSubmit: async (values, action) => {
+        const data = {
+          current_password: values?.currentPassword,
+          new_password: values?.newPassword,
+          confirm_password: values?.confirmNewPassword,
+        };
+        postData(
+          "/api/admin/change-password",
+          false,
+          null,
+          data,
+          processUpdatePassword,
+          setOpen,
+          resetForm
+        );
+      },
+    });
   return (
     <div className="bg-white p-10 rounded-[16px] h-screen grid lg:grid-cols-2 items-center justify-center ">
       <div className="px-10">
@@ -43,8 +51,8 @@ const UpdatePassword = () => {
               placeholder={"Enter password here"}
               type={"password"}
               value={values.currentPassword}
-              id={'currentPassword'}
-              name={'currentPassword'}
+              id={"currentPassword"}
+              name={"currentPassword"}
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.currentPassword}
@@ -57,8 +65,8 @@ const UpdatePassword = () => {
               placeholder={"Enter new password here"}
               type={"password"}
               value={values.newPassword}
-              id={'newPassword'}
-              name={'newPassword'}
+              id={"newPassword"}
+              name={"newPassword"}
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.newPassword}
@@ -71,8 +79,8 @@ const UpdatePassword = () => {
               placeholder={"Re enter password here"}
               type={"password"}
               value={values.confirmNewPassword}
-              id={'confirmNewPassword'}
-              name={'confirmNewPassword'}
+              id={"confirmNewPassword"}
+              name={"confirmNewPassword"}
               onChange={handleChange}
               onBlur={handleBlur}
               error={errors.confirmNewPassword}
@@ -80,7 +88,7 @@ const UpdatePassword = () => {
             />
           </div>
           <div className="w-[360px] mt-4">
-            <Button text={"Update"} type={"submit"}  />
+            <Button text={"Update"} type={"submit"} loading={loading} />
           </div>
         </form>
       </div>
@@ -91,10 +99,7 @@ const UpdatePassword = () => {
           alt=""
         />
       </div>
-      <UpdatePassModal
-      showModal={open}
-    handleClose={()=>setOpen(false)}
-      />
+      <UpdatePassModal showModal={open} handleClose={() => setOpen(false)} />
     </div>
   );
 };

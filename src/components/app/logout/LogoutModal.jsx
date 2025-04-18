@@ -3,7 +3,7 @@ import { DeleteIcon } from "../../../assets/export";
 import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router";
 
-const LogoutModal = ({ showModal, handleClose }) => {
+const LogoutModal = ({ showModal, handleClose,handleLogOut }) => {
     const navigate =useNavigate()
   return (
     showModal && (
@@ -33,7 +33,7 @@ const LogoutModal = ({ showModal, handleClose }) => {
             <button className="bg-[#ECECEC] text-[#242424] w-[140px] rounded-[8px] h-[44px] " onClick={handleClose}>
               No
             </button>
-            <button className="bg-[#EE3131] text-white w-[140px] rounded-[8px] h-[44px] " onClick={() =>navigate('/auth/login') }>
+            <button className="bg-[#EE3131] text-white w-[140px] rounded-[8px] h-[44px] " onClick={handleLogOut}>
               Yes
             </button>
           </div>

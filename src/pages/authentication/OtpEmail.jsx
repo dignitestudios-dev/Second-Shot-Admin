@@ -1,16 +1,47 @@
-import React, { useRef, useState } from "react";
-import { useLogin } from "../../hooks/api/Post";
+import React, { useContext, useRef, useState } from "react";
+import { useResendOtp, useVerifyOtp } from "../../hooks/api/Post";
 import { useFormik } from "formik";
-import {  useNavigate } from "react-router";
-import { AuthIcon,OtpIcon } from "../../assets/export";
+import { useNavigate } from "react-router";
+import { AuthIcon, OtpIcon } from "../../assets/export";
 import Button from "../../components/global/Button";
 import BackButton from "../../components/global/BackButton";
-
+import { processResendOtp, processVerifyOtp } from "../../lib/utils";
+import * as Yup from "yup";
+import { AuthContext } from "../../context/AuthContext";
 const OtpEmail = () => {
-  const [otp, setOtp] = useState(Array(6).fill(""));
-  const { loading, postData } = useLogin();
+  const { loading, postData } = useVerifyOtp();
+  const { loader, OtpResend } = useResendOtp();
   const navigate = useNavigate();
+  const email = sessionStorage.getItem("user_email");
   const inputs = useRef([]);
+  const { resendTime,setResendTime,timer  } = useContext(AuthContext);
+
+  const [otp, setOtp] = useState(Array(6).fill(""));
+
+  const { values, handleBlur, handleSubmit, errors, touched, setFieldValue } =
+    useFormik({
+      initialValues: { otp: "" },
+      validationSchema: Yup.object({
+        otp: Yup.string()
+          .length(6, "OTP must be 6 digits")
+          .required("OTP is required"),
+      }),
+      validateOnChange: true,
+      validateOnBlur: true,
+      onSubmit: async (values, action) => {
+        const data = {
+          email,
+          otp: values.otp,
+        };
+        postData(
+          "/api/auth/admin/verify-otp",
+          false,
+          null,
+          data,
+          processVerifyOtp
+        );
+      },
+    });
 
   const handleChange = (e, index) => {
     const { value } = e.target;
@@ -19,6 +50,9 @@ const OtpEmail = () => {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
+
+      const joinedOtp = newOtp.join("");
+      setFieldValue("otp", joinedOtp);
 
       if (index < otp.length - 1) {
         inputs.current[index + 1].focus();
@@ -31,24 +65,27 @@ const OtpEmail = () => {
       const newOtp = [...otp];
       newOtp[index] = "";
       setOtp(newOtp);
+      setFieldValue("otp", newOtp.join(""));
 
       if (index > 0) {
         inputs.current[index - 1].focus();
       }
     }
   };
-  const { values, handleBlur, handleSubmit, errors, touched } =
-    useFormik({
-      initialValues: 'loginValues',
-      validationSchema: 'signInSchema',
-      validateOnChange: true,
-      validateOnBlur: true,
-      onSubmit: async (values, action) => {
-        // Use the loading state to show loading spinner
-        // Use the response if you want to perform any specific functionality
-        // Otherwise you can just pass a callback that will process everything
-      },
-    });
+
+  const handleResend = () => {
+    const data = {
+      email: email,
+    };
+    OtpResend(
+      "/api/auth/admin/resend-otp",
+      false,
+      null,
+      data,
+      processResendOtp,
+      setResendTime,
+    );
+  };
 
   return (
     <div className="bg-gradient-to-br from-[#d2e1ee]/60 to-[#dff7d6]/40 p-8">
@@ -65,21 +102,18 @@ const OtpEmail = () => {
             </div>
 
             <h1 className="text-center mt-4 text-[32px] font-[600] text-[#181818] ">
-            Verify OTP 
+              Verify OTP
             </h1>
             <p className="text-center mt-2 text-[16px] leading-[100%] font-[400] text-[#181818]  ">
-            The code was sent to <span className="font-[500]">johndoe@mail.com </span> 
+              The code was sent to <span className="font-[500]">{email}</span>
             </p>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit(e);
-              }}
+              onSubmit={handleSubmit}
               className="w-full md:w-[393px] mt-4  flex flex-col justify-start items-start gap-4"
             >
               <div className="w-full h-auto flex flex-col justify-start items-start gap-1">
                 <div className="flex justify-center space-x-4 ">
-                  {otp?.map((digit, index) => (
+                  {otp.map((digit, index) => (
                     <input
                       key={index}
                       type="text"
@@ -93,11 +127,25 @@ const OtpEmail = () => {
                   ))}
                 </div>
               </div>
+
+              {errors.otp && touched.otp && (
+                <p className="text-red-500 text-sm mt-1">{errors.otp}</p>
+              )}
               <div className="w-full">
-                <Button text={"Verify"} type={"submit"} handleSubmit={()=>navigate('/auth/reset-password')} />
+                <Button text={"Verify"} type={"submit"} loading={loading} />
               </div>
               <div className="flex justify-center w-full">
-             <p className="text-[16px]  font-[500] leading-[1%] mt-2 " >Didn't receive the code yet ? Resend</p>
+                <p className="text-center flex justify-center  text-[16px] text-[#181818] font-[500] ">
+                  Didn’t receive the code yet?{" "}
+                  <div
+                    className={`font-medium text-[#012C57] hover:underline mx-2 cursor-pointer ${
+                      resendTime ? "pointer-events-none text-gray-400" : ""
+                    }`}
+                    onClick={() => handleResend()}
+                  >
+                    {resendTime ? `Resend in ${timer}s` : "Resend"}
+                  </div>
+                </p>
               </div>
             </form>
           </div>

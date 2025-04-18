@@ -1,18 +1,22 @@
 import React, { useState } from "react";
-import { useLogin } from "../../hooks/api/Post";
+import { useResetPassword } from "../../hooks/api/Post";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router";
-import { AuthIcon, ForgotiIcon, OtpIcon, TickIcon } from "../../assets/export";
+import { AuthIcon, ForgotiIcon, TickIcon } from "../../assets/export";
 import Button from "../../components/global/Button";
 import BackButton from "../../components/global/BackButton";
 import Input from "../../components/global/Input";
 import { ResetPasswordSchema } from "../../schema/authentication/LoginSchema";
 import { ResetValues } from "../../init/authentication/LoginValues";
+import { processResetPassword } from "../../lib/utils";
 
 const ResetPassword = () => {
-  const { loading, postData } = useLogin();
+  const { loading, postData } = useResetPassword();
   const navigate = useNavigate();
   const [isTrue, setIsTrue] = useState(false);
+
+  const email = sessionStorage.getItem("user_email");
+
   const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
     useFormik({
       initialValues: ResetValues,
@@ -20,10 +24,20 @@ const ResetPassword = () => {
       validateOnChange: true,
       validateOnBlur: true,
       onSubmit: async (values, action) => {
-        setIsTrue(true);
-        // Use the loading state to show loading spinner
-        // Use the response if you want to perform any specific functionality
-        // Otherwise you can just pass a callback that will process everything
+        const data = {
+          email: email,
+          password: values.password,
+          confirm_password: values.Cpassword,
+        };
+
+        postData(
+          "/api/auth/admin/reset-password",
+          false,
+          null,
+          data,
+          processResetPassword,
+          setIsTrue
+        );
       },
     });
 
@@ -76,16 +90,16 @@ const ResetPassword = () => {
                   </h1>
                 </div>
                 <form className="space-y-3" onSubmit={handleSubmit}>
-                <Input
-                  onChange={handleChange}
-                  id={"password"}
-                  name={"password"}
-                  value={values.password}
-                  type={"password"}
-                  placeholder={"Password"}
-                  error={errors.password}
-                  maxLength={50}
-                />
+                  <Input
+                    onChange={handleChange}
+                    id={"password"}
+                    name={"password"}
+                    value={values.password}
+                    type={"password"}
+                    placeholder={"Password"}
+                    error={errors.password}
+                    maxLength={50}
+                  />
                   <Input
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -99,11 +113,7 @@ const ResetPassword = () => {
                   />
 
                   <div className="mb-6 pt-2">
-                    <Button
-                      type="submit"
-                      text="Save"
-                      
-                    />
+                    <Button type="submit" text="Save" loading={loading} />
                   </div>
                   <BackButton handleClick={() => navigate(-1)} />
                 </form>

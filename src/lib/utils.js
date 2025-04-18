@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router";
-import { ErrorToast } from "../components/global/Toaster";
+import { ErrorToast, SuccessToast } from "../components/global/Toaster";
 
 export const processSignup = (data, navigate) => {
   if (data?.success) {
@@ -8,9 +7,61 @@ export const processSignup = (data, navigate) => {
   }
 };
 
-export const processLogin = (data, navigate) => {
+export const processLogin = (data, navigate, loginAuth) => {
   if (data?.success) {
-    navigate("/app/dashboard");
+    loginAuth(data);
+    SuccessToast(data?.message);
+    navigate("/app/home");
+    return;
+  }
+};
+
+export const processForget = (data, navigate, email) => {
+  if (data?.success) {
+    sessionStorage.setItem("user_email", email);
+    SuccessToast(data?.message);
+    navigate("/auth/otp-email");
+    return;
+  }
+};
+
+export const processUpdatePassword = (data, navigate, setOpen,resetForm) => {
+  if (data?.success) {
+    SuccessToast(data?.message);
+    setOpen(true);
+    resetForm()
+    return;
+  }
+};
+
+export const processResetPassword = (data, navigate, setIsTrue) => {
+  if (data?.success) {
+    SuccessToast(data?.message);
+    setIsTrue(true);
+    return;
+  }
+};
+export const processVerifyOtp = (data, navigate) => {
+  if (data?.success) {
+    SuccessToast(data?.message);
+    navigate("/auth/reset-password");
+    return;
+  }
+};
+export const processResendOtp = (data, navigate, setResendTime, startTimer) => {
+  if (data?.success) {
+    SuccessToast(data?.message);
+    setResendTime(true);
+    startTimer();
+    return;
+  }
+};
+
+export const processNotification = (data, navigate, resetForm) => {
+  if (data?.success) {
+    SuccessToast(data?.message);
+    resetForm();
+    navigate('/app/push-notifications')
     return;
   }
 };

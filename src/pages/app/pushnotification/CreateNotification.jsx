@@ -7,10 +7,12 @@ import TimePicker from "../../../components/global/TimePicker";
 import { useFormik } from "formik";
 import { CreateNotificationSchema } from "../../../schema/app/CreateNotificationSchema";
 import { CreateNotificationValues } from "../../../init/authentication/CreateNotificationValues";
+import { useCreateNotification } from "../../../hooks/api/Post";
+import { processNotification } from "../../../lib/utils";
 
 const CreateNotification = () => {
   const [startDate, setStartDate] = useState(null); // null se start karein
-
+  const { loading, postData } = useCreateNotification();
   const navigate = useNavigate();
   const {
     values,
@@ -20,18 +22,25 @@ const CreateNotification = () => {
     errors,
     touched,
     setFieldValue,
+    resetForm
   } = useFormik({
     initialValues: CreateNotificationValues,
     validationSchema: CreateNotificationSchema,
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, action) => {
-     
-      // postData("/admin/login", false, null, data, processLogin);
-
-      // Use the loading state to show loading spinner
-      // Use the response if you want to perform any specific functionality
-      // Otherwise you can just pass a callback that will process everything
+      const data = {
+        notification_title: values.title,
+        notification_message: values.description,
+      };
+      postData(
+        "/api/admin/send-notification",
+        false,
+        null,
+        data,
+        processNotification,
+        resetForm
+      );
     },
   });
   return (
@@ -85,17 +94,16 @@ const CreateNotification = () => {
           )}
         </div>
 
-        <div className="flex flex-col md:flex-row gap-6">
+        {/* <div className="flex flex-col md:flex-row gap-6">
           <div className="">
             <label className="text-[14px] font-medium text-[#181818] block mb-2">
               Select Date
             </label>
             <Calender
-            
               startDate={values.startDate}
               setStartDate={(date) => setFieldValue("startDate", date)}
               position="left-0"
-                text="Select Date"
+              text="Select Date"
             />
             {errors.startDate && touched.startDate && (
               <p className="text-red-500 text-sm">{errors.startDate}</p>
@@ -114,10 +122,10 @@ const CreateNotification = () => {
               <p className="text-red-500 text-sm">{errors.time}</p>
             )}
           </div>
-        </div>
+        </div> */}
         <div className="flex gap-6">
           <div className="w-[150px]">
-            <Button text={"Save"} type={"submit"} />
+            <Button text={"Save"} type={"submit"} loading={loading} />
           </div>
           <div>
             <button className="bg-[#E9E9E9] w-[150px] h-[50px] rounded-[9px]   text-[#000000] text-[14px] font-[700] ">

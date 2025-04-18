@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useLogin } from "../../hooks/api/Post";
-import { processLogin } from "../../lib/utils";
+import { useForgetPassword } from "../../hooks/api/Post";
+import { processForget, processLogin } from "../../lib/utils";
 import { useFormik } from "formik";
 import { NavLink, useNavigate } from "react-router";
 import { AuthIcon, ForgotiIcon, Logo } from "../../assets/export";
@@ -11,7 +11,7 @@ import { ForgetPasswordSchema } from "../../schema/authentication/LoginSchema";
 import { ForgetValues } from "../../init/authentication/LoginValues";
 
 const ForgetPassword = () => {
-  const { loading, postData } = useLogin();
+  const { loading, postData } = useForgetPassword();
   const navigate = useNavigate();
   const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
     useFormik({
@@ -20,10 +20,19 @@ const ForgetPassword = () => {
       validateOnChange: true,
       validateOnBlur: true,
       onSubmit: async (values, action) => {
-        navigate("/auth/otp-email");
-        // Use the loading state to show loading spinner
-        // Use the response if you want to perform any specific functionality
-        // Otherwise you can just pass a callback that will process everything
+        const data = {
+          email: values.email,
+        };
+        postData(
+          "/api/auth/admin/forget-password",
+          false,
+          null,
+          data,
+          processForget,
+          values.email
+        );
+        
+    
       },
     });
 
@@ -48,10 +57,7 @@ const ForgetPassword = () => {
               Enter your registered email address below
             </p>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit(e);
-              }}
+              onSubmit={handleSubmit}
               className="w-full md:w-[393px] mt-4  flex flex-col justify-start items-start gap-4"
             >
               <div className="w-full h-auto flex flex-col justify-start items-start gap-1">
@@ -67,7 +73,7 @@ const ForgetPassword = () => {
                 />
               </div>
               <div className="w-full">
-                <Button text={"Send"} type={"submit"} />
+                <Button text={"Send"} type={"submit"} loading={loading} />
               </div>
               <div className="flex justify-center w-full">
                 <BackButton handleClick={() => navigate(-1)} />

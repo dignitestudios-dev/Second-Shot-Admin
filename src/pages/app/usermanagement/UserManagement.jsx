@@ -1,31 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { FilterIcon, SearchIcon, Userprofile } from "../../../assets/export";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Pagination from "../../../components/global/Pagination";
 import UsersTable from "../../../components/app/usermanagement/UsersTable";
 import Filter from "../../../components/global/Filter";
+import { useUsers } from "../../../hooks/api/Get";
 
 const UserManagement = () => {
-  const users = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "johndoe@gmail.com",
-      phone: "+000 0000 000",
-      location: "Toronto, Canada",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    ...Array(9)
-      .fill(null)
-      .map((_, index) => ({
-        id: index + 2,
-        name: "Christine Brooks",
-        email: "christinebrooks@gmail.com",
-        phone: "+000 0000 000",
-        location: "Toronto, Canada",
-        avatar: "/placeholder.svg?height=40&width=40",
-      })),
-  ];
+  const [currentPage, setCurrentPage] = useState(1);
+  const [update, setUpdate] = useState(false);
+ 
+  const { data, loading, pagination } = useUsers(
+    `/api/admin/users`,
+    currentPage,
+    update
+  );
+  
   return (
     <div>
       <div className="p-3">
@@ -49,7 +39,15 @@ const UserManagement = () => {
             </div>
           </div>
         </div>
-        <UsersTable users={users} />
+        <UsersTable
+          users={data?.users}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          update={update}
+          setUpdate={setUpdate}
+          loading={loading}
+          pagination={pagination}
+        />
       </div>
     </div>
   );

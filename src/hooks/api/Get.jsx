@@ -13,13 +13,18 @@ const useUsers = (url, currentPage = 1) => {
       setLoading(true);
       const { data } = await axios.get(`${url}?page=${currentPage}`);
       setData(data?.data);
-      setPagination(data?.pagination);
+      setPagination({
+        currentPages: data?.data?.currentPage,
+        totalPages: data?.data?.totalPages,
+        totalUsers: data?.data?.totalUsers,
+      });
     } catch (error) {
       processError(error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     getUsers();
@@ -27,5 +32,30 @@ const useUsers = (url, currentPage = 1) => {
 
   return { loading, data, pagination };
 };
+const useGetNotification = (url, currentPage = 1) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState({});
 
-export { useUsers };
+  const getNotification = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`${url}?page=${currentPage}`);
+      setData(data?.notifications);
+     
+    } catch (error) {
+      processError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
+  useEffect(() => {
+    getNotification();
+  }, [currentPage]);
+
+  return { loading, data, pagination };
+};
+
+export { useUsers,useGetNotification };
