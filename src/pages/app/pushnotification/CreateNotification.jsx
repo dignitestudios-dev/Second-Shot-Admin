@@ -94,35 +94,7 @@ const CreateNotification = () => {
           )}
         </div>
 
-        {/* <div className="flex flex-col md:flex-row gap-6">
-          <div className="">
-            <label className="text-[14px] font-medium text-[#181818] block mb-2">
-              Select Date
-            </label>
-            <Calender
-              startDate={values.startDate}
-              setStartDate={(date) => setFieldValue("startDate", date)}
-              position="left-0"
-              text="Select Date"
-            />
-            {errors.startDate && touched.startDate && (
-              <p className="text-red-500 text-sm">{errors.startDate}</p>
-            )}
-          </div>
-          <div className="">
-            <label className="text-[14px] font-medium text-[#181818] block mb-2">
-              Select Time
-            </label>
-            <TimePicker
-              value={values.time}
-              onSave={({ time }) => setFieldValue("time", time)}
-              onCancel={() => setFieldValue("time", "")}
-            />
-            {errors.time && touched.time && (
-              <p className="text-red-500 text-sm">{errors.time}</p>
-            )}
-          </div>
-        </div> */}
+      
         <div className="flex gap-6">
           <div className="w-[150px]">
             <Button text={"Save"} type={"submit"} loading={loading} />

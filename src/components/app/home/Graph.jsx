@@ -146,9 +146,11 @@ const SubscriptionChart = () => {
                 startDate={startDate}
                 setStartDate={setStartDate}
                 setUpdate={setUpdate}
+                  endDate={false}
               />
               <Calender
                 startDate={endDate}
+                endDate={true}
                 setStartDate={setEndDate}
                 setUpdate={setUpdate}
               />

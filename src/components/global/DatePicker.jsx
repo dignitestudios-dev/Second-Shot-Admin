@@ -9,6 +9,7 @@ const Calender = ({
   position = "right-0",
   text,
   setUpdate,
+  endDate,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,7 +19,9 @@ const Calender = ({
 
   const handleChange = (date) => {
     setStartDate(date);
-    setUpdate((prev) => !prev);
+    if (endDate) {
+      setUpdate((prev) => !prev);
+    }
     setIsOpen(false);
   };
 
