@@ -1,23 +1,96 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router";
-import { SearchIcon, Usersprofile, Youtube } from "../../../assets/export";
-
+import { SearchIcon } from "../../../assets/export";
 import GoalsCard from "../../../components/app/usermanagement/Goals";
 import CarrersCards from "../../../components/app/usermanagement/CarrersCards";
 import ResumeFile from "../../../components/app/usermanagement/ResumeFile";
-import TrasnferableSkills from "../../../components/app/usermanagement/TrasnferableSkills";
 import { phoneFormater } from "../../../lib/helpers";
+import { useUserDetails, useUsers } from "../../../hooks/api/Get";
+import TransferableSkill from "../../../components/app/usermanagement/TransferableSkill";
+import { TranfserableSkeleton } from "../../../components/global/Skeleton";
+import SearchInput from "../../../components/global/SearchInput";
 
 const UserDetail = () => {
   const navigate = useNavigate();
   const [selectedButton, setSelectedButton] = useState("All");
-  const buttons = ["All", "Not started yet", "In Progress", "Completed"];
+  const buttons = ["All", "Not Started yet", "In Progress", "Completed"];
   const tabs = ["Transferable Skills", "Goals", "Careers", "Resume"];
   const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [goalQuery, setGoalQuery] = useState("");
+  const [carrerrQuery, setCarrerrQuery] = useState("");
+  const [careerFiltered, setCareerFiltered] = useState("");
+  const [resumeFiltered, setResumeFiltered] = useState("");
+  const [resumeQuery, setResumeQuery] = useState("");
   const { state } = useLocation();
   const { user } = state || {};
 
+  const { data: transferableSkill, loading: skillsLoader } = useUsers(
+    `/api/admin/user-transferable-skills/${user?._id}`
+  );
+  const { data: goalData, loading: loader } = useUserDetails(
+    `/api/admin/user-goals`,
+    user?._id
+  );
+  const { data: resumeData, loading: resumeloader } = useUserDetails(
+    `/api/admin/user-resumes`,
+    user?._id
+  );
+  const { data: careerData, loading: careerloader } = useUserDetails(
+    `/api/admin/user-career-recommendations`,
+    user?._id
+  );
+
+  const handleGoalChange = (e) => {
+    setGoalQuery(e.target.value);
+  };
+  const handleCareerChange = (e) => {
+    setCarrerrQuery(e.target.value);
+  };
+  const handleResumeChange = (e) => {
+    setResumeQuery(e.target.value);
+  };
+
+  const filteredGoals = goalData
+    ?.filter((goal) =>
+      selectedButton === "All" ? true : goal.status === selectedButton
+    )
+    ?.filter((goal) =>
+      goal?.main_goal_name?.toLowerCase().includes(goalQuery.toLowerCase())
+    );
+
+  useEffect(() => {
+    let filtered = careerData;
+
+    if (carrerrQuery) {
+      filtered = filtered.filter((recommendation) => {
+        return recommendation.careers.some((carrer) => {
+          const careerName = carrer.career.name.toLowerCase().trim();
+          const query = carrerrQuery.toLowerCase().trim();
+
+          return careerName.includes(query);
+        });
+      });
+    }
+
+    setCareerFiltered(filtered);
+  }, [carrerrQuery, careerData]);
+
+  useEffect(() => {
+    let filtered = resumeData;
+
+    if (resumeQuery) {
+      filtered = filtered?.filter((item) => {
+        const createdAt = new Date(item.createdAt);
+
+        const formattedCreatedAt = createdAt.toISOString().split("T")[0];
+
+        return formattedCreatedAt.includes(resumeQuery);
+      });
+    }
+
+    setResumeFiltered(filtered);
+  }, [resumeQuery, resumeData]);
   return (
     <div>
       <div
@@ -65,10 +138,12 @@ const UserDetail = () => {
           <div>
             <p className="text-[#565656] text-[16px] ">Subscription</p>
             <p className="text-[16px] font-medium text-[#0F0F0F] text-nowrap">
-              Path Finder Plus/{" "}
-              <span className="text-[#565656] text-[12px] ">
-                {user?.current_subscription_plan || "No Subscription"}
-              </span>
+              {user?.current_subscription_plan === "yearly_plan"
+                ? "Yearly"
+                : user?.current_subscription_plan ||
+                  user?.current_subscription_plan === "3-month"
+                ? "Quarterly"
+                : user?.current_subscription_plan || "No Subscription"}
             </p>
           </div>
         </div>
@@ -91,54 +166,95 @@ const UserDetail = () => {
             ))}
           </div>
         </div>
-        {activeTab !== "Transferable Skills" && (
+        {activeTab === "Goals" && (
           <div>
-            <div className="relative w-full sm:w-auto">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <img src={SearchIcon} className="h-4 w-4 " alt="Search Icon" />
-              </div>
-              <input
-                type="text"
-                className="bg-white h-[49px] w-[256px] border border-gray-300 text-gray-900 text-sm rounded-lg block  pl-10 p-2.5 pr-10"
-                placeholder="Search"
-              />
-            </div>
+            <SearchInput onChange={handleGoalChange} value={goalQuery} />
+          </div>
+        )}
+        {activeTab === "Careers" && (
+          <div>
+            <SearchInput onChange={handleCareerChange} value={carrerrQuery} />
+          </div>
+        )}
+        {activeTab === "Resume" && (
+          <div>
+            <SearchInput onChange={handleResumeChange} value={resumeQuery} />
           </div>
         )}
       </div>
       {activeTab == "Transferable Skills" && (
         <div className="bg-white p-2 rounded-[8px]">
-          <TrasnferableSkills />
+          {skillsLoader ? (
+            <TranfserableSkeleton />
+          ) : transferableSkill ? (
+            <div className="text-center  h-[270px] flex justify-center items-center">
+              No Transferable Skills Found
+            </div>
+          ) : (
+            <TransferableSkill
+              transferableSkill={transferableSkill}
+              skillsLoader={skillsLoader}
+            />
+          )}
         </div>
       )}
-      {activeTab == "Goals" && (
+
+      {activeTab === "Goals" && (
         <div className="bg-white p-2 rounded-[8px]">
-          <div className="flex space-x-6 mb-6 bg-white p-1 rounded-md">
-            {buttons.map((button) => (
-              <button
-                key={button}
-                className={` mx-2 pt-4  text-[16px] font-[#212121] ${
-                  selectedButton === button
-                    ? "border-b-2 border-b-black "
-                    : "text-[#565656]"
-                } text-[14px] rounded-sm leading-[18.9px]`}
-                onClick={() => setSelectedButton(button)}
-              >
-                {button}
-              </button>
-            ))}
-          </div>
-          <GoalsCard />
+          {filteredGoals.length === 0 ? (
+            <div className="text-center  h-[270px] flex justify-center items-center">
+              No Goals Found
+            </div>
+          ) : (
+            <>
+              <div className="flex space-x-6 mb-6 bg-white p-1 rounded-md">
+                {buttons.map((button) => (
+                  <button
+                    key={button}
+                    className={`mx-2 pt-4 text-[16px] font-[#212121] ${
+                      selectedButton === button
+                        ? "border-b-2 border-b-black"
+                        : "text-[#565656]"
+                    } text-[14px] rounded-sm leading-[18.9px]`}
+                    onClick={() => setSelectedButton(button)}
+                  >
+                    {button}
+                  </button>
+                ))}
+              </div>
+
+              <GoalsCard goalData={filteredGoals} loader={loader} />
+            </>
+          )}
         </div>
       )}
+
       {activeTab == "Careers" && (
         <div className="bg-white p-3 rounded-[8px]">
-          <CarrersCards />
+          {careerFiltered.length === 0 ? (
+            <div className="text-center  h-[270px] flex justify-center items-center">
+              No Careers Found
+            </div>
+          ) : (
+            <CarrersCards
+              careerData={careerFiltered}
+              careerloader={careerloader}
+            />
+          )}
         </div>
       )}
       {activeTab == "Resume" && (
         <div className="bg-white p-3 rounded-[8px]">
-          <ResumeFile />
+          {resumeFiltered.length === 0 ? (
+            <div className="text-center  h-[270px] flex justify-center items-center">
+              No Resume Found
+            </div>
+          ) : (
+            <ResumeFile
+              resumeData={resumeFiltered}
+              resumeloader={resumeloader}
+            />
+          )}
         </div>
       )}
     </div>

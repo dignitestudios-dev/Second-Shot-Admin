@@ -7,8 +7,9 @@ import SucessStory from "../../pages/app/successstory/SucessStory";
 import ProfileDetail from "../../pages/app/successstory/ProfileDetail";
 import UserDetail from "../../pages/app/usermanagement/UserDetail";
 import GoalDetail from "../../pages/app/usermanagement/GoalDetail";
-import CareerDetails from "../../pages/app/usermanagement/CarrerDetail";
+
 import ResumeDetail from "../../pages/app/usermanagement/ResumeDetail";
+import CareerDetails from "../../pages/app/usermanagement/CareerDetails";
 
 export const Approutes = [
   {
@@ -68,7 +69,7 @@ export const Approutes = [
     ispublic: true,
   },
   {
-    url: "carrer-detail",
+    url: "carrer-detail/:id",
     title: "carrer-detail",
     page: <CareerDetails />,
     ispublic: true,

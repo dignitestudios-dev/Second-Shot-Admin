@@ -5,17 +5,33 @@ import Pagination from "../../../components/global/Pagination";
 import UsersTable from "../../../components/app/usermanagement/UsersTable";
 import Filter from "../../../components/global/Filter";
 import { useUsers } from "../../../hooks/api/Get";
+import SearchInput from "../../../components/global/SearchInput";
 
 const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [update, setUpdate] = useState(false);
- 
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [search, setSearch] = useState();
+
   const { data, loading, pagination } = useUsers(
-    `/api/admin/users`,
+    `/api/admin/users/filter-search`,
     currentPage,
+    { startDate: startDate ? startDate : "", endDate: endDate ? endDate : "" },
+    search ? search : "",
     update
   );
-  
+
+  const handleClear = () => {
+    setEndDate("");
+    setStartDate("");
+    setSearch("");
+    setUpdate((prev) => !prev);
+  };
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    setUpdate((prev) => !prev);
+  };
   return (
     <div>
       <div className="p-3">
@@ -24,18 +40,16 @@ const UserManagement = () => {
             User Management
           </h1>
           <div className="flex items-center gap-4">
-            <div className="relative w-full sm:w-auto">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <img src={SearchIcon} className="h-4 w-4 " alt="" />
-              </div>
-              <input
-                type="text"
-                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2.5 pr-10"
-                placeholder="Search"
-              />
-            </div>
+            <SearchInput onChange={handleSearch} value={search} />
             <div className="bg-grad-button w-[40.15px] h-[41px] flex items-center  justify-center rounded-[8px] ">
-              <Filter />
+              <Filter
+                setEndDate={setEndDate}
+                setStartDate={setStartDate}
+                setUpdate={setUpdate}
+                handleClear={handleClear}
+                startDate={startDate}
+                endDate={endDate}
+              />
             </div>
           </div>
         </div>

@@ -15,9 +15,11 @@ const TrasnferableSkills = () => {
   const [RightSkill, setRightSkill] = useState(false);
   const [BottomRightSkill, setBottomRightSkill] = useState(false);
   const [BottomLeftSkill, setBottomLeftSkill] = useState(false);
-
   const [appear, setAppear] = useState(false);
 
+
+
+  
   return (
     <div className="w-full">
       <div className="grid grid-cols-12 justify-center items-center">

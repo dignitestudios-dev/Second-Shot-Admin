@@ -14,13 +14,13 @@ const AuthProvider = ({ children }) => {
   const loginAuth = (data) => {
     if (data) {
       Cookies.set("token", data?.data?.token);
-      Cookies.set("name", data?.data?.userRecord?.name);
-      Cookies.set("email", data?.data?.userRecord?.email);
+      Cookies.set("name", data?.data?.name);
+      Cookies.set("email", data?.data?.email);
       //   Cookies.set("profilePicture", data?.data?.userRecord?.profilePicture);
 
       setToken(data?.data?.token);
-      setName(data?.data?.userRecord?.name);
-      setEmail(data?.data?.userRecord?.email);
+      setName(data?.data?.name);
+      setEmail(data?.data?.email);
     }
   };
   const startTimer = () => {
@@ -39,8 +39,8 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     Cookies.remove("token");
-    // Cookies.remove("name");
-    // Cookies.remove("email");
+    Cookies.remove("name");
+    Cookies.remove("email");
     // Cookies.clear();
     setToken(null);
     navigate("/auth/login");

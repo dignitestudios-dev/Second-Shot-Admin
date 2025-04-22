@@ -3,7 +3,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalenderIcon } from "../../assets/export";
 
-const Calender = ({ startDate, setStartDate,position = "right-0",text }) => {
+const Calender = ({
+  startDate,
+  setStartDate,
+  position = "right-0",
+  text,
+  setUpdate,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleCalendar = () => {
@@ -12,7 +18,8 @@ const Calender = ({ startDate, setStartDate,position = "right-0",text }) => {
 
   const handleChange = (date) => {
     setStartDate(date);
-    setIsOpen(false); // close after selecting
+    setUpdate((prev) => !prev);
+    setIsOpen(false);
   };
 
   return (
@@ -41,7 +48,7 @@ const Calender = ({ startDate, setStartDate,position = "right-0",text }) => {
             selected={startDate}
             onChange={handleChange}
             inline
-            minDate={new Date()}
+            maxDate={new Date()}
             calendarClassName="shadow-lg border rounded-md"
             onClickOutside={() => setIsOpen(false)}
           />

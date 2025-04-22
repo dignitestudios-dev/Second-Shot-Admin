@@ -2,7 +2,7 @@ import React from "react";
 import Pagination from "../../global/Pagination";
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from "react-router";
-import { phoneFormater } from "../../../lib/helpers";
+import { getDateFormat, phoneFormater } from "../../../lib/helpers";
 import SkeletonTable from "../../global/SkeletonTable";
 
 const UsersTable = ({
@@ -14,7 +14,7 @@ const UsersTable = ({
   pagination
 }) => {
   const navigate = useNavigate();
-  console.log(pagination,'pagination')
+ 
   return (
     <div>
       {loading ? (
@@ -36,6 +36,7 @@ const UsersTable = ({
                     "Email Address",
                     "Phone Number",
                     "Location",
+                    "Created At",
                     "Action",
                   ].map((header, index) => (
                     <th
@@ -80,6 +81,9 @@ const UsersTable = ({
                       {user?.city && user?.state
                         ? `${user.city}, ${user.state}`
                         : "Not Found"}
+                    </td>
+                    <td className="px-4 text-[14px] py-3 text-[#202224]">
+                      {getDateFormat(user.createdAt)}
                     </td>
 
                     <td className="px-4  text-[14px] py-3">

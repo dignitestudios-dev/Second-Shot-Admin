@@ -26,7 +26,6 @@ const Login = () => {
         };
         postData("/api/auth/admin/login", false, null, data, processLogin);
         
-       
       },
     });
 

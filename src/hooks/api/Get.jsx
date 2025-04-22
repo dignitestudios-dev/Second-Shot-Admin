@@ -3,7 +3,7 @@ import axios from "../../axios";
 import { ErrorToast } from "../../components/global/Toaster";
 import { processError } from "../../lib/utils";
 
-const useUsers = (url, currentPage = 1) => {
+const useUsers = (url, currentPage = 1, datefilter, search, update) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -11,7 +11,10 @@ const useUsers = (url, currentPage = 1) => {
   const getUsers = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${url}?page=${currentPage}`);
+
+      const { data } = await axios.get(
+        `${url}?from=${datefilter?.startDate}&to=${datefilter?.endDate}&query=${search}&page=${currentPage}`
+      );
       setData(data?.data);
       setPagination({
         currentPages: data?.data?.currentPage,
@@ -24,38 +27,85 @@ const useUsers = (url, currentPage = 1) => {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     getUsers();
-  }, [currentPage]);
+  }, [currentPage, update]);
 
   return { loading, data, pagination };
 };
-const useGetNotification = (url, currentPage = 1) => {
+
+const useGraph = (url, datefilter, update) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-  const [pagination, setPagination] = useState({});
 
-  const getNotification = async () => {
+  const getGraph = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${url}?page=${currentPage}`);
-      setData(data?.notifications);
-     
+
+      const { data } = await axios.get(
+        `${url}?from=${datefilter?.startDate}&to=${datefilter?.endDate}`
+      );
+      setData(data?.data);
     } catch (error) {
       processError(error);
     } finally {
       setLoading(false);
     }
   };
-  
+
+  useEffect(() => {
+    getGraph();
+  }, [update]);
+
+  return { loading, data };
+};
+
+const useGetNotification = (url, datefilter, update) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  const getNotification = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `${url}?from=${datefilter?.startDate}&to=${datefilter?.endDate}`
+      );
+      setData(data?.notifications);
+    } catch (error) {
+      processError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getNotification();
-  }, [currentPage]);
+  }, [update]);
 
-  return { loading, data, pagination };
+  return { loading, data };
+};
+const useUserDetails = (url, id) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  const getUserDetails = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`${url}/${id}`);
+      setData(data?.data);
+    } catch (error) {
+      processError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+
+  return { loading, data };
 };
 
-export { useUsers,useGetNotification };
+export { useUsers, useGetNotification, useGraph, useUserDetails };
