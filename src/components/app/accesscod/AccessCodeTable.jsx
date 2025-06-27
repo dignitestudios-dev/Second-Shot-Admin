@@ -34,7 +34,7 @@ const AccessCodeTable = () => {
         setAccessCode(response?.data?.data?.code);
         setAccessCodeModal(true);
         setUpdate((prev) => !prev);
-        setCurrentPage(1)
+        setCurrentPage(1);
       }
     } catch (error) {
       console.error("Error creating access code:", error);
@@ -60,6 +60,7 @@ const AccessCodeTable = () => {
       setLoading(false);
     }
   };
+
   return (
     <>
       <div className="flex items-center justify-between mb-4">
@@ -80,13 +81,11 @@ const AccessCodeTable = () => {
             <table className="w-full text-[14px] font-[400] text-left">
               <thead className="text-[14px] text-[#202224] bg-[#FCFDFD] border-y border-gray-200">
                 <tr>
-                  {["#", "Access Code", "Status"].map(
-                    (header, index) => (
-                      <th key={index} className="px-4 font-[400] py-3">
-                        {header}
-                      </th>
-                    )
-                  )}
+                  {["#", "Access Code", "Status"].map((header, index) => (
+                    <th key={index} className="px-4 font-[400] py-3">
+                      {header}
+                    </th>
+                  ))}
                 </tr>
               </thead>
 

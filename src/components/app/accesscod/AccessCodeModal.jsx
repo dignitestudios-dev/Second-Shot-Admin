@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const AccessCodeModal = ({ showModal, handleClose, accessCode }) => {
   const [copied, setCopied] = useState(false);
-  console.log(undefined, "undefined");
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(accessCode);
