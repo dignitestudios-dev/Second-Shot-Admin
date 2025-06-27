@@ -15,13 +15,21 @@ const useLogin = () => {
     isFormData = false,
     formdata = null,
     data = null,
-    callback
+    callback,
+    resetForm,
+    setGenerateCode
   ) => {
     try {
       setLoading(true);
       const response = await axios.post(url, isFormData ? formdata : data);
       if (typeof callback === "function") {
-        callback(response?.data, navigate, loginAuth);
+        callback(
+          response?.data,
+          navigate,
+          loginAuth,
+          resetForm,
+          setGenerateCode
+        );
       }
       return response?.data;
     } catch (error) {
@@ -82,7 +90,7 @@ const useUpdatePassword = () => {
       setLoading(true);
       const response = await axios.post(url, isFormData ? formdata : data);
       if (typeof callback === "function") {
-        callback(response?.data, navigate, modal,resetForm);
+        callback(response?.data, navigate, modal, resetForm);
       }
       return response?.data;
     } catch (error) {
@@ -220,5 +228,5 @@ export {
   useVerifyOtp,
   useUpdatePassword,
   useResendOtp,
-  useCreateNotification
+  useCreateNotification,
 };

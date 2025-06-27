@@ -10,6 +10,9 @@ import GoalDetail from "../../pages/app/usermanagement/GoalDetail";
 
 import ResumeDetail from "../../pages/app/usermanagement/ResumeDetail";
 import CareerDetails from "../../pages/app/usermanagement/CareerDetails";
+import PromoCode from "../../pages/app/promocode/PromoCode";
+import PromoTable from "../../components/app/promocode/PromoTable";
+import PromoForm from "../../components/app/promocode/PromoForm";
 
 export const Approutes = [
   {
@@ -78,6 +81,24 @@ export const Approutes = [
     url: "resume-detail",
     title: "resume-detail",
     page: <ResumeDetail />,
+    ispublic: true,
+  },
+  {
+    url: "promo-code",
+    title: "promo-code",
+    page: <PromoCode />,
+    ispublic: true,
+  },
+  {
+    url: "generate-promo-code",
+    title: "generate-promo-code",
+    page: <PromoForm />,
+    ispublic: true,
+  },
+  {
+    url: "access-code",
+    title: "access-code",
+    page: <PromoCode />,
     ispublic: true,
   },
 ];

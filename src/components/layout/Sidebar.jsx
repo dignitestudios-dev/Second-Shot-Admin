@@ -3,7 +3,6 @@ import { IoMdClose } from "react-icons/io";
 import { LogoutIcon, SideBarLogo } from "../../assets/export";
 import { sidebarData } from "../../static/Sidebar";
 
-
 const Sidebaar = ({ toggleModal, setIsOpen }) => {
   const location = useLocation();
 
@@ -37,15 +36,24 @@ const Sidebaar = ({ toggleModal, setIsOpen }) => {
               }`
             }
           >
-            <img
-              src={
-                location?.pathname === sidebar.link
-                  ? sidebar?.whiteIcon
-                  : sidebar?.icon
-              }
-              className="w-4 h-4 object-contain"
-              alt={`${sidebar.title}-icon`}
-            />
+            {typeof sidebar.icon === "string" ? (
+              <img
+                src={
+                  location?.pathname === sidebar.link
+                    ? sidebar?.whiteIcon
+                    : sidebar?.icon
+                }
+                className="w-4 h-4 object-contain"
+                alt={`${sidebar.title}-icon`}
+              />
+            ) : (
+              <span className="text-lg">
+                {location?.pathname === sidebar.link
+                  ? sidebar.whiteIcon
+                  : sidebar.icon}
+              </span>
+            )}
+
             <span>{sidebar?.title}</span>
           </NavLink>
         ))}

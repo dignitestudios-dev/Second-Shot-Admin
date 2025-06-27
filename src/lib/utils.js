@@ -25,11 +25,11 @@ export const processForget = (data, navigate, email) => {
   }
 };
 
-export const processUpdatePassword = (data, navigate, setOpen,resetForm) => {
+export const processUpdatePassword = (data, navigate, setOpen, resetForm) => {
   if (data?.success) {
     SuccessToast(data?.message);
     setOpen(true);
-    resetForm()
+    resetForm();
     return;
   }
 };
@@ -38,6 +38,38 @@ export const processResetPassword = (data, navigate, setIsTrue) => {
   if (data?.success) {
     SuccessToast(data?.message);
     setIsTrue(true);
+    return;
+  }
+};
+export const processCoupenCode = (
+  data,
+  navigate,
+  loginAuth,
+
+  setGenerateCode
+) => {
+  if (data?.success) {
+    SuccessToast(data?.message);
+
+    sessionStorage.setItem("couponId", data?.data?.id);
+    setGenerateCode(true);
+    return;
+  }
+};
+export const processGenerateCode = (
+  data,
+  navigate,
+  loginAuth,
+  resetForm,
+  setGenerateCode
+) => {
+  if (data?.success) {
+    SuccessToast(data?.message);
+    if (typeof resetForm === "function") {
+      resetForm();
+    }
+    setGenerateCode(false);
+    navigate("/app/promo-code");
     return;
   }
 };
@@ -61,7 +93,7 @@ export const processNotification = (data, navigate, resetForm) => {
   if (data?.success) {
     SuccessToast(data?.message);
     resetForm();
-    navigate('/app/push-notifications')
+    navigate("/app/push-notifications");
     return;
   }
 };
