@@ -220,6 +220,66 @@ const useCreateNotification = () => {
 
   return { loading, postData };
 };
+const useSuccessStory = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const postData = async (
+    url,
+    isFormData = false,
+    formdata = null,
+    data = null,
+    callback = null,
+    modal = false,
+    update = false
+  ) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(url, isFormData ? formdata : data);
+      if (typeof callback === "function") {
+        callback(response?.data, modal, update);
+      }
+      return response?.data;
+    } catch (error) {
+      console.log(error);
+      processError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, postData };
+};
+const useEditSuccessStory = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const postData = async (
+    url,
+    isFormData = false,
+    formdata = null,
+    data = null,
+    callback = null,
+    modal = false,
+    update = false
+  ) => {
+    try {
+      setLoading(true);
+      const response = await axios.put(url, isFormData ? formdata : data);
+      if (typeof callback === "function") {
+        callback(response?.data, modal, update);
+      }
+      return response?.data;
+    } catch (error) {
+      console.log(error);
+      processError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, postData };
+};
 
 export {
   useLogin,
@@ -229,4 +289,6 @@ export {
   useUpdatePassword,
   useResendOtp,
   useCreateNotification,
+  useSuccessStory,
+  useEditSuccessStory,
 };

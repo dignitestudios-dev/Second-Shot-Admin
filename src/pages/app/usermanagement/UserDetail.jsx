@@ -23,7 +23,7 @@ const UserDetail = () => {
   const [resumeFiltered, setResumeFiltered] = useState("");
   const [resumeQuery, setResumeQuery] = useState("");
   const { state } = useLocation();
-  const { user } = state || {};
+  const { user } = state  || {};
 
   const { data: transferableSkill, loading: skillsLoader } = useUsers(
     `/api/admin/user-transferable-skills/${user?._id}`
@@ -40,7 +40,7 @@ const UserDetail = () => {
     `/api/admin/user-career-recommendations`,
     user?._id
   );
-
+console.log(transferableSkill,"transferableSkill==>")
   const handleGoalChange = (e) => {
     setGoalQuery(e.target.value);
   };
@@ -126,7 +126,8 @@ const UserDetail = () => {
           <div>
             <p className="text-[#565656] text-[16px]">Phone Number</p>
             <p className="text-[16px] font-medium text-[#0F0F0F] text-nowrap">
-              +1 {phoneFormater(user?.phone)}
+            {user?.phone ? `+1 ${phoneFormater(user.phone)}` : "N/A"}
+
             </p>
           </div>
           <div>
@@ -187,14 +188,15 @@ const UserDetail = () => {
           {skillsLoader ? (
             <TranfserableSkeleton />
           ) : transferableSkill ? (
-            <div className="text-center  h-[270px] flex justify-center items-center">
-              No Transferable Skills Found
-            </div>
-          ) : (
-            <TransferableSkill
+             <TransferableSkill
               transferableSkill={transferableSkill}
               skillsLoader={skillsLoader}
             />
+            
+          ) : (
+           <div className="text-center  h-[270px] flex justify-center items-center">
+              No Transferable Skills Found
+            </div>
           )}
         </div>
       )}

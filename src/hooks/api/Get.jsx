@@ -85,6 +85,36 @@ const useGetNotification = (url, datefilter, update) => {
 
   return { loading, data };
 };
+
+const useGetSuccess = (url, currentPage = 1, datefilter, update) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState({});
+  const getSuccess = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `${url}?from=${datefilter?.startDate}&to=${datefilter?.endDate}&page=${currentPage}`
+      );
+      setData(data);
+      setPagination({
+        currentPages: data?.pagination?.currentPage,
+        totalPages: data?.pagination?.totalPages,
+        totalUsers: data?.pagination?.totalUsers,
+      });
+    } catch (error) {
+      processError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getSuccess();
+  }, [currentPage, update]);
+
+  return { loading, data, pagination };
+};
 const useUserDetails = (url, id) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -108,4 +138,10 @@ const useUserDetails = (url, id) => {
   return { loading, data };
 };
 
-export { useUsers, useGetNotification, useGraph, useUserDetails };
+export {
+  useUsers,
+  useGetNotification,
+  useGraph,
+  useUserDetails,
+  useGetSuccess,
+};

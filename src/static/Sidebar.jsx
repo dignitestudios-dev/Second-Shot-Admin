@@ -42,7 +42,7 @@ export const sidebarData = [
     link: "/app/update-password",
   },
   {
-    title: "Promo Code",
+    title: "Promo & Access Code",
     icon: <FaTag />,
     whiteIcon: <FaTag />,
     link: "/app/promo-code",

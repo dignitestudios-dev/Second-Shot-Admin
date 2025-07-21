@@ -2,7 +2,12 @@ import React from "react";
 import { DeleteIcon, PassowrdUpdateIcon } from "../../../assets/export";
 import { RxCross2 } from "react-icons/rx";
 
-const StoryDelete = ({ showModal, handleClose }) => {
+const StoryDelete = ({
+  showModal,
+  handleClose,
+  handleDelete,
+  deleteLoading,
+}) => {
   return (
     showModal && (
       <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
@@ -28,11 +33,18 @@ const StoryDelete = ({ showModal, handleClose }) => {
             </p>
           </div>
           <div className="flex gap-2 justify-center mt-3">
-            <button className="bg-[#ECECEC] text-[#242424] w-[140px] rounded-[8px] h-[44px] " onClick={handleClose}>
+            <button
+              className="bg-[#ECECEC] text-[#242424] w-[140px] rounded-[8px] h-[44px] "
+              onClick={handleClose}
+            >
               No
             </button>
-            <button className="bg-[#EE3131] text-white w-[140px] rounded-[8px] h-[44px] ">
-              Yes
+            <button
+              onClick={handleDelete}
+              disabled={deleteLoading}
+              className="bg-[#EE3131] text-white w-[140px] rounded-[8px] h-[44px] flex items-center justify-center"
+            >
+              {deleteLoading ? "Deleting..." : "Yes"}
             </button>
           </div>
         </div>

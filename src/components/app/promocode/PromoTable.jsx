@@ -83,7 +83,7 @@ const PromoTable = () => {
                     className="bg-white border-b hover:bg-gray-50"
                   >
                     <td className="px-4 py-3 font-medium text-[#202224] ">
-                      {index}
+                      {index+1}
                     </td>
                     <td className="px-4 py-3 font-medium text-[#202224] ">
                       {item?.code}

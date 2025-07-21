@@ -97,6 +97,16 @@ export const processNotification = (data, navigate, resetForm) => {
     return;
   }
 };
+export const processSuccessStory = (data, setOpen, setUpdate) => {
+  console.log(data, "data==>");
+  if (data?.message) {
+    SuccessToast(data?.message);
+    setOpen(false);
+    setUpdate((prev) => !prev);
+
+    return;
+  }
+};
 
 export const processError = (error) => {
   if (error?.response?.data?.message) {

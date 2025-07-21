@@ -34,7 +34,7 @@ const UsersTable = ({
                   {[
                     "Name",
                     "Email Address",
-                    "Phone Number",
+                    
                     "Location",
                     "Created At",
                     "Action",
@@ -74,9 +74,9 @@ const UsersTable = ({
                     <td className="px-4 text-[14px] py-3 text-[#202224]">
                       {user?.email || "Not Found"}
                     </td>
-                    <td className="px-4 text-[14px] py-3 text-[#202224]">
+                    {/* <td className="px-4 text-[14px] py-3 text-[#202224]">
                       +1 {phoneFormater(user?.phone) || "Not Found"}
-                    </td>
+                    </td> */}
                     <td className="px-4 text-[14px] py-3 text-[#202224]">
                       {user?.city && user?.state
                         ? `${user.city}, ${user.state}`

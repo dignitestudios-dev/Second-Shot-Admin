@@ -7,11 +7,15 @@ import Button from "../../global/Button";
 import { useFormik } from "formik";
 import { AddStoryValues } from "../../../init/authentication/AddStoryValues";
 import { AddStorySchema } from "../../../schema/app/AddStorySchema";
+import {
+  useSuccessStory,
+} from "../../../hooks/api/Post";
+import { processSuccessStory } from "../../../lib/utils";
 
-const AddStoryModal = ({ showModal, handleClose }) => {
-
-
+const AddStoryModal = ({ showModal, handleClose, setOpen ,setUpdate}) => {
+  const { loading, postData } = useSuccessStory();
   const [previewImage, setPreviewImage] = useState(null);
+  
   const {
     values,
     handleBlur,
@@ -25,13 +29,24 @@ const AddStoryModal = ({ showModal, handleClose }) => {
     validationSchema: AddStorySchema,
     validateOnChange: true,
     validateOnBlur: true,
-    onSubmit: async (values, action) => {
-      console.log(values,"values==>")
-      handleClose()
-      // postData("/admin/login", false, null, data, processLogin);
-      // Use the loading state to show loading spinner
-      // Use the response if you want to perform any specific functionality
-      // Otherwise you can just pass a callback that will process everything
+    onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append("profile_img", values.uploadPicture);
+      formData.append("name", values.fullname);
+      formData.append("profession", values.firstShot);
+      formData.append("profession2", values.secondShot);
+      formData.append("youtube_link", values.youTubelink);
+      formData.append("current_profession", values.quote);
+      formData.append("linkedin_profile", values.linkedin_link);
+      postData(
+        "/api/admin/create-success-story",
+        true,
+        formData,
+        null,
+        processSuccessStory,
+        setOpen,
+        setUpdate
+      );
     },
   });
 
@@ -53,36 +68,36 @@ const AddStoryModal = ({ showModal, handleClose }) => {
           <hr />
           <div>
             <form action="" onSubmit={handleSubmit}>
-            <label className="flex items-center gap-5 mt-5 cursor-pointer">
-            <input
-              type="file"
-              name="uploadPicture"
-              className="hidden"
-              accept="image/*"
-              onChange={(event) => {
-                const file = event.currentTarget.files[0];
-                setFieldValue("uploadPicture", file);
+              <label className="flex items-center gap-5 mt-5 cursor-pointer">
+                <input
+                  type="file"
+                  name="uploadPicture"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.currentTarget.files[0];
+                    setFieldValue("uploadPicture", file);
 
-                // Set preview
-                if (file) {
-                  const imageUrl = URL.createObjectURL(file);
-                  setPreviewImage(imageUrl);
-                }
-              }}
-            />
-            <div>
-              <img
-                src={previewImage || UplaodPic}
-                className="w-[80px] h-[80px] object-cover rounded-full"
-                alt="Upload Preview"
-              />
-            </div>
-            <div>
-              <h2 className="underline text-[16px] text-[#181818] font-medium">
-                Upload Picture
-              </h2>
-            </div>
-          </label>
+                    // Set preview
+                    if (file) {
+                      const imageUrl = URL.createObjectURL(file);
+                      setPreviewImage(imageUrl);
+                    }
+                  }}
+                />
+                <div>
+                  <img
+                    src={previewImage || UplaodPic}
+                    className="w-[80px] h-[80px] object-cover rounded-full"
+                    alt="Upload Preview"
+                  />
+                </div>
+                <div>
+                  <h2 className="underline text-[16px] text-[#181818] font-medium">
+                    Upload Picture
+                  </h2>
+                </div>
+              </label>
               {errors.uploadPicture && touched.uploadPicture && (
                 <div className="text-red-500 text-sm mt-1">
                   {errors.uploadPicture}
@@ -104,28 +119,29 @@ const AddStoryModal = ({ showModal, handleClose }) => {
                   </div>
                   <div className="mt-4">
                     <Input
-                      value={values.profession}
+                      value={values.firstShot}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      id={"profession"}
-                      name={"profession"}
-                      text={"Profession"}
-                      placeholder={"Name"}
-                      error={errors.profession}
+                      id={"firstShot"}
+                      name={"firstShot"}
+                      text={"First Shot"}
+                      placeholder={"First Shot"}
+                      error={errors.firstShot}
                     />
                   </div>
                   <div className="mt-4">
                     <Input
-                      text={"Location"}
-                      placeholder={"Name"}
-                      value={values.location}
+                      value={values.secondShot}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      id={"location"}
-                      name={"location"}
-                      error={errors.location}
+                      id={"secondShot"}
+                      name={"secondShot"}
+                      text={"Second Shot"}
+                      placeholder={"Second Shot"}
+                      error={errors.secondShot}
                     />
                   </div>
+
                   <div className="mt-4">
                     <Input
                       text={"YouTube link"}
@@ -139,80 +155,41 @@ const AddStoryModal = ({ showModal, handleClose }) => {
                     />
                   </div>
                   <div className="mt-4">
-                    <span className="text-[14px]"></span>
-                    <TextArea
-                      text={"Current Profession"}
-                      placeholder={"Describe your Current Profession"}
-                      row={10}
-                      value={values.currentProfession}
+                    <Input
+                      text={"Linkedin link"}
+                      placeholder={"Linkedin link"}
+                      value={values.linkedin_link}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={errors.currentProfession}
-                      id={"currentProfession"}
-                      name={"currentProfession"}
+                      id={"linkedin_link"}
+                      name={"linkedin_link"}
+                      error={errors.linkedin_link}
                     />
                   </div>
                 </div>
                 <div>
                   <div>
-                    <TextArea
-                      text={"Education"}
-                      placeholder={"Describe your Education"}
-                      row={4}
-                      value={values.education}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={errors.education}
-                      id={"education"}
-                      name={"education"}
-                    />
-                  </div>
-                  <div>
-                    <TextArea
-                      text={"Experience"}
-                      placeholder={"Describe your Experience"}
-                      row={4}
-                      value={values.experience}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={errors.experience}
-                      id={"experience"}
-                      name={"experience"}
-                    />
-                  </div>
-                  <div>
-                    <TextArea
-                      text={
-                        "  Can you identify your most valuable transferable skill, and how have you seen it manifest in different areas of your life?"
-                      }
-                      placeholder={"Describe"}
-                      row={4}
-                      value={values.mostValuable}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={errors.mostValuable}
-                      id={"mostValuable"}
-                      name={"mostValuable"}
-                    />
-                  </div>
-                  <div>
-                    <TextArea
-                      text={
-                        " If you could give one piece of advice to your younger self, what would it be, and why?"
-                      }
-                      placeholder={"Describe your Education"}
-                      row={4}
-                      value={values.advice}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={errors.advice}
-                      id={"advice"}
-                      name={"advice"}
-                    />
+                    <div className="mt-4">
+                      <TextArea
+                        text={"Quote"}
+                        placeholder={"Describe your Quote"}
+                        row={10}
+                        value={values.quote}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={errors.quote}
+                        id={"quote"}
+                        name={"quote"}
+                      />
+                    </div>
                   </div>
                   <div className="flex justify-end ">
                     <div className="w-[197px] ">
-                      <Button text={"Add Success Story"} type={"submit"} />
+                      <Button
+                        text={"Add Success Story"}
+                        type={"submit"}
+                        loading={loading}
+                      />
                     </div>
                   </div>
                 </div>

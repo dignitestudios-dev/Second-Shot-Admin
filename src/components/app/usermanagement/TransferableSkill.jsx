@@ -2,6 +2,7 @@ import React from "react";
 import { TranfserableSkeleton } from "../../global/Skeleton";
 
 const TransferableSkill = ({ transferableSkill, skillsLoader }) => {
+
   return (
     <div className="p-6 bg-white rounded-xl shadow-md space-y-8">
       {skillsLoader ? (
