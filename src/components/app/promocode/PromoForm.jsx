@@ -13,48 +13,72 @@ const PromoForm = () => {
   const navigate = useNavigate();
   const [generateCode, setGenerateCode] = useState(false);
   const coupenId = sessionStorage.getItem("couponId");
-  const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
-    useFormik({
-      initialValues: {
-        name: "",
-        percent_off: "",
-        code: "",
-      },
-      validationSchema: promoCode,
-      validateOnChange: true,
-      validateOnBlur: true,
-      onSubmit: async (values, action) => {
-        const data = {
-          name: values?.name,
-          percent_off: values?.percent_off,
-        };
-        const generateCodeData = {
-          couponId: coupenId,
-          code: values.code,
-        };
-        {
-          generateCode
-            ? postData(
-                "/api/subscription/create-promotion-code",
-                false,
-                null,
-                generateCodeData,
-                processGenerateCode,
-                action.resetForm,
-                setGenerateCode
-              )
-            : postData(
-                "/api/subscription/create-subscription-coupon",
-                false,
-                null,
-                data,
-                processCoupenCode,
-                setGenerateCode
-              );
-        }
-      },
-    });
+  const todayStr = new Date().toISOString().split("T")[0];
+  const {
+    values,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    errors,
+    touched,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      name: "",
+      percent_off: "",
+      code: "",
+      expires_at: "",
+    },
+    validationSchema: promoCode,
+    validateOnChange: true,
+    validateOnBlur: true,
+    onSubmit: async (values, action) => {
+      const data = {
+        name: values?.name,
+        percent_off: values?.percent_off,
+      };
+      const generateCodeData = {
+        couponId: coupenId,
+        code: values.code,
+        expirationDate: values.expires_at,
+      };
+      {
+        generateCode
+          ? postData(
+              "/api/subscription/create-promotion-code",
+              false,
+              null,
+              generateCodeData,
+              processGenerateCode,
+              action.resetForm,
+              setGenerateCode
+            )
+          : postData(
+              "/api/subscription/create-subscription-coupon",
+              false,
+              null,
+              data,
+              processCoupenCode,
+              setGenerateCode
+            );
+      }
+    },
+  });
+  // 👇 component ke top pe (todayStr ki jagah)
+  const tzOffset = new Date().getTimezoneOffset() * 60000; // ms
+  const todayLocal = new Date(Date.now() - tzOffset);
+  const tomorrowLocal = new Date(todayLocal);
+  tomorrowLocal.setDate(tomorrowLocal.getDate() + 1);
+  const tomorrowStr = tomorrowLocal.toISOString().split("T")[0];
 
+  const handleDateChange = (e) => {
+    const picked = e.target.value;
+    if (picked < tomorrowStr) {
+      alert("You can only pick a date after today.");
+      return;
+    }
+    setFieldValue("expires_at", picked);
+  };
   return (
     <div className="bg-white p-10">
       <div
@@ -111,6 +135,22 @@ const PromoForm = () => {
               placeholder={"Enter Coupon Code"}
               maxLength={50}
             />
+            <div className="mt-3">
+              <label className="ml-1 text-[14px] font-medium text-[#181818] ">
+                Enter Expiration Date
+              </label>
+              <input
+                type="date"
+                placeholder="Expires At"
+                value={values.expires_at}
+                id="expires_at"
+                name="expires_at"
+                min={tomorrowStr} // <-- today nahi, kal se
+                onChange={handleDateChange}
+                onBlur={handleBlur}
+                className="border border-gray-400 w-full rounded-md h-[49px] p-3 cursor-pointer"
+              />
+            </div>
           </div>
         )}
         <Button
