@@ -40,7 +40,7 @@ const UserDetail = () => {
     `/api/admin/user-career-recommendations`,
     user?._id
   );
-console.log(transferableSkill,"transferableSkill==>")
+
   const handleGoalChange = (e) => {
     setGoalQuery(e.target.value);
   };

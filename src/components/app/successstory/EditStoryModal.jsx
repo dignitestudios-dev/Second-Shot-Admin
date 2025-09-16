@@ -20,13 +20,12 @@ const EditStoryModal = ({
   const { loading, postData } = useEditSuccessStory();
   const [previewImage, setPreviewImage] = useState(null);
   const {
-    data:careerData,
+    data: careerData,
     loading: loader,
     pagination,
   } = useGetSuccess(`/api/admin/career-list`);
   const [initialValues, setInitialValues] = useState(AddStoryValues);
-  console.log(careerData, "careerData==>");
-  console.log(data, "data==>");
+
 
   useEffect(() => {
     if (data) {
@@ -102,7 +101,7 @@ const EditStoryModal = ({
     validateOnBlur: true,
 
     onSubmit: async (values, action) => {
-      console.log(values, "values==>");
+  
       const formData = new FormData();
       formData.append("profile_img", values.uploadPicture);
       formData.append("name", values.fullname);
@@ -111,7 +110,7 @@ const EditStoryModal = ({
       formData.append("youtube_link", values.youTubelink);
       formData.append("current_profession", values.quote);
       formData.append("linkedin_profile", values.linkedin_link);
-         formData.append(
+      formData.append(
         "career_recommendations",
         JSON.stringify(values.career_recommendations)
       );
@@ -286,56 +285,62 @@ const EditStoryModal = ({
                       </svg>
                     </div>
 
-                   {values?.careerDropdownOpen && (
-  <div className="mt-1 w-full max-h-48 overflow-auto bg-white border border-gray-300 rounded-lg shadow-lg">
-    {careerData?.data?.map((item) => (
-      <label
-        key={item._id}
-        className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
-      >
-        <input
-          type="checkbox"
-          value={item?._id}
-          checked={values?.career_recommendations?.includes(item?._id)} // ✅ id check
-          onChange={(e) => {
-            const currentValues = values?.career_recommendations || [];
+                    {values?.careerDropdownOpen && (
+                      <div className="mt-1 w-full max-h-48 overflow-auto bg-white border border-gray-300 rounded-lg shadow-lg">
+                        {careerData?.data?.map((item) => (
+                          <label
+                            key={item._id}
+                            className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              value={item?._id}
+                              checked={values?.career_recommendations?.includes(
+                                item?._id
+                              )} // ✅ id check
+                              onChange={(e) => {
+                                const currentValues =
+                                  values?.career_recommendations || [];
 
-            if (e.target.checked) {
-              setFieldValue("career_recommendations", [
-                ...currentValues,
-                item?._id,
-              ]);
-            } else {
-              setFieldValue(
-                "career_recommendations",
-                currentValues.filter((id) => id !== item._id)
-              );
-            }
-          }}
-          className="mr-2"
-        />
-        {item?.career_name}
-      </label>
-    ))}
-  </div>
-)}
+                                if (e.target.checked) {
+                                  setFieldValue("career_recommendations", [
+                                    ...currentValues,
+                                    item?._id,
+                                  ]);
+                                } else {
+                                  setFieldValue(
+                                    "career_recommendations",
+                                    currentValues.filter(
+                                      (id) => id !== item._id
+                                    )
+                                  );
+                                }
+                              }}
+                              className="mr-2"
+                            />
+                            {item?.career_name}
+                          </label>
+                        ))}
+                      </div>
+                    )}
 
-{values?.career_recommendations?.length > 0 && (
-  <div className="flex flex-wrap gap-2 mt-2">
-    {values?.career_recommendations?.map((id) => {
-      const career = careerData?.data?.find((c) => c._id === id); // ✅ id se match
-      return (
-        <span
-          key={id}
-          className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs"
-        >
-          {career?.career_name}
-        </span>
-      );
-    })}
-  </div>
-)}
-
+                    {values?.career_recommendations?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {values?.career_recommendations?.map((id) => {
+                          const career = careerData?.data?.find(
+                            (c) => c._id === id
+                          ); // ✅ id se match
+                          return (
+                            <span
+                              key={id}
+                              className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs"
+                            >
+                              {career?.career_name}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                   <div className="mt-4">
                     <Input
