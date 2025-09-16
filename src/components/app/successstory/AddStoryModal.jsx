@@ -7,15 +7,19 @@ import Button from "../../global/Button";
 import { useFormik } from "formik";
 import { AddStoryValues } from "../../../init/authentication/AddStoryValues";
 import { AddStorySchema } from "../../../schema/app/AddStorySchema";
-import {
-  useSuccessStory,
-} from "../../../hooks/api/Post";
+import { useSuccessStory } from "../../../hooks/api/Post";
 import { processSuccessStory } from "../../../lib/utils";
+import { useGetSuccess } from "../../../hooks/api/Get";
 
-const AddStoryModal = ({ showModal, handleClose, setOpen ,setUpdate}) => {
+const AddStoryModal = ({ showModal, handleClose, setOpen, setUpdate }) => {
   const { loading, postData } = useSuccessStory();
   const [previewImage, setPreviewImage] = useState(null);
-  
+  const {
+    data,
+    loading: loader,
+    pagination,
+  } = useGetSuccess(`/api/admin/career-list`);
+
   const {
     values,
     handleBlur,
@@ -29,7 +33,7 @@ const AddStoryModal = ({ showModal, handleClose, setOpen ,setUpdate}) => {
     validationSchema: AddStorySchema,
     validateOnChange: true,
     validateOnBlur: true,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const formData = new FormData();
       formData.append("profile_img", values.uploadPicture);
       formData.append("name", values.fullname);
@@ -38,12 +42,20 @@ const AddStoryModal = ({ showModal, handleClose, setOpen ,setUpdate}) => {
       formData.append("youtube_link", values.youTubelink);
       formData.append("current_profession", values.quote);
       formData.append("linkedin_profile", values.linkedin_link);
+      formData.append("school", values.school);
+      formData.append(
+        "career_recommendations",
+        JSON.stringify(values.career_recommendations)
+      );
+
       postData(
         "/api/admin/create-success-story",
         true,
         formData,
         null,
-        processSuccessStory,
+        (res, modal, update) => {
+          processSuccessStory(res, setOpen, setUpdate, resetForm);
+        },
         setOpen,
         setUpdate
       );
@@ -168,6 +180,114 @@ const AddStoryModal = ({ showModal, handleClose, setOpen ,setUpdate}) => {
                   </div>
                 </div>
                 <div>
+                  <div className="mt-4">
+                    <Input
+                      value={values.school}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      id={"school"}
+                      name={"school"}
+                      text={"School"}
+                      placeholder={"School"}
+                      error={errors.school}
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label
+                      htmlFor="career"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Select Career(s)
+                    </label>
+
+                    <div
+                      onClick={() =>
+                        setFieldValue(
+                          "careerDropdownOpen",
+                          !values?.careerDropdownOpen
+                        )
+                      }
+                      className="border border-gray-300 rounded-lg px-3 py-2 flex items-center justify-between cursor-pointer"
+                    >
+                      <span className="text-sm text-gray-700">
+                        {values?.career_recommendations?.length > 0
+                          ? `${values?.career_recommendations?.length} selected`
+                          : "Select Career(s)"}
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`h-4 w-4 transform transition-transform ${
+                          values?.careerDropdownOpen ? "rotate-180" : ""
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+
+                    {values?.careerDropdownOpen && (
+                      <div className="mt-1 w-full max-h-48 overflow-auto bg-white border border-gray-300 rounded-lg shadow-lg">
+                        {data?.data?.map((item) => (
+                          <label
+                            key={item._id}
+                            className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              value={item?._id}
+                              checked={values?.career_recommendations?.includes(
+                                item?._id
+                              )}
+                              onChange={(e) => {
+                                const currentValues =
+                                  values?.career_recommendations || []; // ✅ fallback empty array
+
+                                if (e.target.checked) {
+                                  setFieldValue("career_recommendations", [
+                                    ...currentValues,
+                                    item?._id,
+                                  ]);
+                                } else {
+                                  setFieldValue(
+                                    "career_recommendations",
+                                    currentValues.filter(
+                                      (id) => id !== item._id
+                                    )
+                                  );
+                                }
+                              }}
+                              className="mr-2"
+                            />
+                            {item?.career_name}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+
+                    {values?.career_recommendations?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {values?.career_recommendations?.map((id) => {
+                          const career = data?.data?.find((c) => c._id === id);
+                          return (
+                            <span
+                              key={id}
+                              className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs"
+                            >
+                              {career?.career_name}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
                   <div>
                     <div className="mt-4">
                       <TextArea

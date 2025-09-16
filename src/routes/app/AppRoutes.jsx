@@ -13,6 +13,7 @@ import CareerDetails from "../../pages/app/usermanagement/CareerDetails";
 import PromoCode from "../../pages/app/promocode/PromoCode";
 import PromoTable from "../../components/app/promocode/PromoTable";
 import PromoForm from "../../components/app/promocode/PromoForm";
+import School from "../../pages/app/addschools/School";
 
 export const Approutes = [
   {
@@ -99,6 +100,12 @@ export const Approutes = [
     url: "access-code",
     title: "access-code",
     page: <PromoCode />,
+    ispublic: true,
+  },
+  {
+    url: "add-school",
+    title: "add-school",
+    page: <School />,
     ispublic: true,
   },
 ];

@@ -97,13 +97,14 @@ export const processNotification = (data, navigate, resetForm) => {
     return;
   }
 };
-export const processSuccessStory = (data, setOpen, setUpdate) => {
-  console.log(data, "data==>");
+export const processSuccessStory = (data, setOpen, setUpdate,resetForm) => {
   if (data?.message) {
     SuccessToast(data?.message);
     setOpen(false);
     setUpdate((prev) => !prev);
-
+    if (typeof resetForm === "function") {
+      resetForm(); // ✅ form clear after success
+    }
     return;
   }
 };

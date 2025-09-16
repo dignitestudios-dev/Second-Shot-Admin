@@ -8,6 +8,7 @@ import {
   UserIcon,
 } from "../assets/export";
 import { FaKey } from "react-icons/fa";
+import { BiSolidSchool } from "react-icons/bi";
 
 export const sidebarData = [
   {
@@ -47,5 +48,10 @@ export const sidebarData = [
     whiteIcon: <FaTag />,
     link: "/app/promo-code",
   },
- 
+  {
+    title: "Add School",
+    icon: <BiSolidSchool />,
+    whiteIcon: <BiSolidSchool />,
+    link: "/app/add-school",
+  },
 ];
