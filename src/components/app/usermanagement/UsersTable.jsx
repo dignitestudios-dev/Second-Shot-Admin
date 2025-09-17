@@ -35,7 +35,7 @@ const UsersTable = ({
                     "Name",
                     "Email Address",
                     
-                    "Location",
+                    "School",
                     "Created At",
                     "Action",
                   ].map((header, index) => (
@@ -77,11 +77,10 @@ const UsersTable = ({
                     {/* <td className="px-4 text-[14px] py-3 text-[#202224]">
                       +1 {phoneFormater(user?.phone) || "Not Found"}
                     </td> */}
-                    <td className="px-4 text-[14px] py-3 text-[#202224]">
-                      {user?.city && user?.state
-                        ? `${user.city}, ${user.state}`
-                        : "Not Found"}
-                    </td>
+                   <td className="px-4 max-w-[200px] overflow-hidden truncate whitespace-nowrap text-[14px] py-3 text-[#202224]">
+  {user?.address || "N/A"}
+</td>
+
                     <td className="px-4 text-[14px] py-3 text-[#202224]">
                       {getDateFormat(user.createdAt)}
                     </td>
