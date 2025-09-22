@@ -9,6 +9,7 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => Cookies.get("token"));
   const [name, setName] = useState(Cookies.get("name"));
   const [email, setEmail] = useState(Cookies.get("email"));
+  const [role, setRole] = useState(Cookies.get("role"));
   const [timer, setTimer] = useState(30);
   const [resendTime, setResendTime] = useState(false);
   const loginAuth = (data) => {
@@ -16,11 +17,13 @@ const AuthProvider = ({ children }) => {
       Cookies.set("token", data?.data?.token);
       Cookies.set("name", data?.data?.name);
       Cookies.set("email", data?.data?.email);
+      Cookies.set("role", data?.data?.role);
       //   Cookies.set("profilePicture", data?.data?.userRecord?.profilePicture);
 
       setToken(data?.data?.token);
       setName(data?.data?.name);
       setEmail(data?.data?.email);
+      setRole(data?.data?.role);
     }
   };
   const startTimer = () => {
@@ -64,6 +67,7 @@ const AuthProvider = ({ children }) => {
         startTimer,
         resendTime,
         timer,
+        role,
         setResendTime,
       }}
     >

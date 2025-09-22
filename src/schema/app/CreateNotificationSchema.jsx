@@ -31,3 +31,20 @@ export const promoCode = Yup.object().shape({
     .min(0, "Minimum is 0%")
     .max(100, "Maximum is 100%"),
 });
+
+export const createSubAdminSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[A-Z]/, "Must contain an uppercase letter")
+    .matches(/[a-z]/, "Must contain a lowercase letter")
+    .matches(/[0-9]/, "Must contain a number")
+    .matches(/[@$!%*?&#]/, "Must contain a special character")
+    .required("Password is required"),
+  confirm_password: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Confirm Password is required"),
+});

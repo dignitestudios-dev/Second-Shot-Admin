@@ -34,6 +34,51 @@ const useUsers = (url, currentPage = 1, datefilter, search, update) => {
 
   return { loading, data, pagination };
 };
+const useFilterUsers = (url, currentPage = 1, filters = {}, search, update) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState({});
+
+  const getUsers = async () => {
+    try {
+      setLoading(true);
+
+      // build query params dynamically
+      const params = new URLSearchParams();
+
+      if (filters?.startDate) params.append("from", filters.startDate);
+      if (filters?.endDate) params.append("to", filters.endDate);
+      if (search) params.append("search", search);
+      if (currentPage) params.append("page", currentPage);
+
+      // add rest of filters dynamically
+      Object.keys(filters).forEach((key) => {
+        if (filters[key] && key !== "startDate" && key !== "endDate") {
+          params.append(key, encodeURIComponent(filters[key]));
+        }
+      });
+
+      const { data } = await axios.get(`${url}?${params.toString()}`);
+
+      setData(data?.data);
+      setPagination({
+        currentPages: data?.data?.currentPage,
+        totalPages: data?.data?.totalPages,
+        totalUsers: data?.data?.totalUsers,
+      });
+    } catch (error) {
+      processError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, [currentPage, update]);
+
+  return { loading, data, pagination };
+};
 
 const useGraph = (url, datefilter, update) => {
   const [loading, setLoading] = useState(false);
@@ -144,4 +189,5 @@ export {
   useGraph,
   useUserDetails,
   useGetSuccess,
+  useFilterUsers,
 };

@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { FilterIcon, SearchIcon, Userprofile } from "../../../assets/export";
+import {
+  FilterIcon,
+  SearchIcon,
+  SubsIcon,
+  Userprofile,
+} from "../../../assets/export";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Pagination from "../../../components/global/Pagination";
 import UsersTable from "../../../components/app/usermanagement/UsersTable";
 import Filter from "../../../components/global/Filter";
-import { useUsers } from "../../../hooks/api/Get";
+import { useFilterUsers, useUsers } from "../../../hooks/api/Get";
 import SearchInput from "../../../components/global/SearchInput";
+import { FaCalendarWeek, FaUserPlus } from "react-icons/fa6";
+import { FaCalendarAlt } from "react-icons/fa";
 
 const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,19 +20,84 @@ const UserManagement = () => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [search, setSearch] = useState();
+  const [idpAnswer, setIdpAnswer] = useState("");
+  // user filter selections ke liye states
+  const [selectedSport, setSelectedSport] = useState("");
+  const [selectedSchool, setSelectedSchool] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedCareers, setSelectedCareers] = useState(""); // multiple select
+  const [selectedHobbies, setSelectedHobbies] = useState([]); // multiple select
 
-  const { data, loading, pagination } = useUsers(
-    `/api/admin/users/filter-search`,
+  const { data: statesCard, loading: statesLoading } =
+    useUsers(`/api/admin/states`);
+  const { data: sportsData, loading: sportLoading } = useUsers(
+    `/api/services/get-sports`
+  );
+  const { data: hobbiesData, loading: hobbiesLoading } = useUsers(
+    `/api/services/get-hobbies`
+  );
+  const { data: schoolsData, loading: schoolsLoading } =
+    useUsers(`/api/admin/schools`);
+  const { data: subjectsData, loading: subjectsLoading } = useUsers(
+    `/api/services/get-subjects`
+  );
+  const { data: careersData, loading: careersLoading } = useUsers(
+    `/api/admin/get-all-careers`
+  );
+
+  const { data, loading, pagination } = useFilterUsers(
+    `/api/admin/users`,
     currentPage,
-    { startDate: startDate ? startDate : "", endDate: endDate ? endDate : "" },
-    search ? search : "",
+    {
+      startDate: startDate || "",
+      endDate: endDate || "",
+      primary_sport: selectedSport || "",
+      school: selectedSchool || "",
+      subject: selectedSubject || "",
+      favorite_hobby:
+        selectedHobbies.length > 0 ? selectedHobbies.join(",") : "",
+      idp_answer: idpAnswer || "",
+      career_name: selectedCareers || "",
+    },
+    search || "",
     update
   );
 
+  const usageCards = [
+    {
+      key: "todayRegisteredUsers",
+      label: "Today Registered Users",
+      icon: <FaUserPlus className="text-[#29ABE2] text-[18px]" />,
+      bg: "bg-[#E1F7FF]",
+      value: statesCard?.todayRegisteredUsers,
+      loading: statesLoading,
+    },
+    {
+      key: "thisWeekRegisteredUsers",
+      label: "This Week Registered Users",
+      icon: <FaCalendarWeek className="text-[#63CFAC] text-[18px]" />,
+      bg: "bg-[#E8FFF5]",
+      value: statesCard?.thisWeekRegisteredUsers,
+      loading: statesLoading,
+    },
+    {
+      key: "thisMonthRegisteredUsers",
+      label: "This Month Registered Users",
+      icon: <FaCalendarAlt className="text-[#5E2E86] text-[18px]" />,
+      bg: "bg-[#F3E9FF]",
+      value: statesCard?.thisMonthRegisteredUsers,
+      loading: statesLoading,
+    },
+  ];
+
   const handleClear = () => {
-    setEndDate("");
     setStartDate("");
-    setSearch("");
+    setEndDate("");
+    setSelectedSport("");
+    setSelectedSchool("");
+    setSelectedSubject("");
+    setSelectedCareers("");
+    setSelectedHobbies([]);
     setUpdate((prev) => !prev);
   };
   const handleSearch = (e) => {
@@ -49,9 +121,48 @@ const UserManagement = () => {
                 handleClear={handleClear}
                 startDate={startDate}
                 endDate={endDate}
+                showExtraFilters={true}
+                sportsData={sportsData}
+                schoolsData={schoolsData}
+                subjectsData={subjectsData}
+                hobbiesData={hobbiesData}
+                setSelectedSport={setSelectedSport}
+                setSelectedSchool={setSelectedSchool}
+                setSelectedSubject={setSelectedSubject}
+                setSelectedHobbies={setSelectedHobbies}
+                selectedHobbies={selectedHobbies}
+                careersData={careersData}
+                setSelectedCareers={setSelectedCareers}
               />
             </div>
           </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+          {usageCards?.map((item) => (
+            <div
+              key={item.key}
+              className="bg-white rounded-[20px] h-[100px] flex items-center px-5 shadow-sm"
+            >
+              <div
+                className={`h-[44px] w-[44px] rounded-[12px] flex items-center justify-center ${item.bg}`}
+              >
+                {item.icon}
+              </div>
+
+              <div className="ml-4 flex flex-col">
+                {item.loading ? (
+                  <div className="h-[20px] w-[50px] bg-gray-200 rounded-md animate-pulse"></div>
+                ) : (
+                  <h1 className="text-[18px] font-[600] text-[#202224]">
+                    {item.value ?? 0}
+                  </h1>
+                )}
+                <p className="text-[13px] text-[#0A150F80] mt-1">
+                  {item.label}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
         <UsersTable
           users={data?.users}

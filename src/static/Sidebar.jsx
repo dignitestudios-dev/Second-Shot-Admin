@@ -24,6 +24,13 @@ export const sidebarData = [
     link: "/app/users",
   },
   {
+    title: "Sub Admin",
+    icon: UserIcon,
+    whiteIcon: UserIcon,
+    link: "/app/sub-admin",
+    roles: ["admin"],
+  },
+  {
     title: "Success Stories",
     icon: SuccesStory,
     whiteIcon: SuccesStory,

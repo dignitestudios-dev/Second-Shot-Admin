@@ -2,6 +2,7 @@ import { FaXmark } from "react-icons/fa6";
 import { FilterIcon } from "../../assets/export";
 import { useState } from "react";
 import DatePickerTwo from "./DatePickerTwo";
+import HobbiesDropdown from "../app/usermanagement/HobbiesDropdown";
 
 export default function Filter({
   setStartDate,
@@ -9,9 +10,22 @@ export default function Filter({
   setUpdate,
   handleClear,
   startDate,
-  endDate
+  endDate,
+  showExtraFilters = false, // 👈 new prop
+  sportsData = [],
+  schoolsData = [],
+  subjectsData = [],
+  hobbiesData = [],
+  setSelectedSport,
+  setSelectedSchool,
+  setSelectedSubject,
+  setSelectedHobbies,
+  selectedHobbies = [],
+  careersData,
+  setSelectedCareers,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="relative">
       <button onClick={() => setIsOpen(!isOpen)}>
@@ -24,7 +38,7 @@ export default function Filter({
 
       {isOpen && (
         <>
-          {/* Overlay for fade effect */}
+          {/* Overlay */}
           <div
             className="fixed inset-0 bg-black bg-opacity-30 z-10"
             onClick={() => setIsOpen(false)}
@@ -39,22 +53,102 @@ export default function Filter({
               </button>
             </div>
 
+            {/* Date filters */}
             <div className="grid grid-cols-2 mt-3 gap-2">
               <div>
-                <label htmlFor="" className="font-[500] text-[14px]">
-                  Start Date
-                </label>
-                <DatePickerTwo startDate={startDate} setStartDate={setStartDate} setUpdate={setUpdate} />
+                <label className="font-[500] text-[14px]">Start Date</label>
+                <DatePickerTwo
+                  startDate={startDate}
+                  setStartDate={setStartDate}
+                  setUpdate={setUpdate}
+                />
               </div>
               <div>
-                <label htmlFor="" className="font-[500] text-[14px]">
-                  End Date
-                </label>
-                <DatePickerTwo startDate={endDate} setStartDate={setEndDate} setUpdate={setUpdate} />
+                <label className="font-[500] text-[14px]">End Date</label>
+                <DatePickerTwo
+                  startDate={endDate}
+                  setStartDate={setEndDate}
+                  setUpdate={setUpdate}
+                />
               </div>
             </div>
 
-            <div className="flex justify-between gap-2 mt-3">
+            {/* Extra dropdowns (only if showExtraFilters === true) */}
+            {showExtraFilters && (
+              <div className="mt-4 space-y-3">
+                {/* Sport */}
+                <div>
+                  <label className="font-[500] text-[14px]">Sport</label>
+                  <select
+                    onChange={(e) => setSelectedSport(e.target.value)}
+                    className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+                  >
+                    <option value="">All</option>
+                    {sportsData?.map((sport) => (
+                      <option key={sport.id} value={sport.id}>
+                        {sport?.sport_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* School */}
+                <div>
+                  <label className="font-[500] text-[14px]">School</label>
+                  <select
+                    onChange={(e) => setSelectedSchool(e.target.value)}
+                    className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+                  >
+                    <option value="">All</option>
+                    {schoolsData?.map((school) => (
+                      <option key={school.id} value={school.id}>
+                        {school.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Subject */}
+                {/* <div>
+                  <label className="font-[500] text-[14px]">Subject</label>
+                  <select
+                    onChange={(e) => setSelectedSubject(e.target.value)}
+                    className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+                  >
+                    <option value="">All</option>
+                    {subjectsData?.map((sub) => (
+                      <option key={sub.id} value={sub.id}>
+                        {sub.subject_name}
+                      </option>
+                    ))}
+                  </select>
+                </div> */}
+                <div>
+                  <label className="font-[500] text-[14px]">Carrers</label>
+                  <select
+                    onChange={(e) => setSelectedCareers(e.target.value)}
+                    className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+                  >
+                    <option value="">All</option>
+                    {careersData?.map((careers) => (
+                      <option key={careers.id} value={careers.id}>
+                        {careers?.career_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Hobbies (multi select) */}
+                <HobbiesDropdown
+                  hobbiesData={hobbiesData}
+                  selectedHobbies={selectedHobbies}
+                  setSelectedHobbies={setSelectedHobbies}
+                />
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex justify-between gap-2 mt-4">
               <button
                 onClick={handleClear}
                 className="bg-[#DCDCDC] text-[#6A6A6A] text-[16px] font-[500] rounded-[8px] w-full h-[50px]"

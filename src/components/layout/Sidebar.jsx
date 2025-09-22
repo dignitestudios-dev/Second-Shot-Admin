@@ -2,10 +2,12 @@ import { NavLink, useLocation } from "react-router";
 import { IoMdClose } from "react-icons/io";
 import { LogoutIcon, SideBarLogo } from "../../assets/export";
 import { sidebarData } from "../../static/Sidebar";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Sidebaar = ({ toggleModal, setIsOpen }) => {
   const location = useLocation();
-
+  const { role } = useContext(AuthContext);
   return (
     <div className="w-full h-full overflow-y-auto px-10 py-4 flex flex-col gap-3">
       <div className="flex justify-end mb-2">
@@ -24,39 +26,47 @@ const Sidebaar = ({ toggleModal, setIsOpen }) => {
       </div>
 
       <div className="flex flex-col gap-2">
-        {sidebarData?.map((sidebar) => (
-          <NavLink
-            key={sidebar?.link}
-            to={sidebar?.link}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 h-[40px] py-2 mt-4 rounded-[8px] text-[13px] font-medium transition-all ${
-                isActive
-                  ? "bg-[#FFFFFF14] text-white"
-                  : "text-white hover:bg-[#ffffff0c]"
-              }`
-            }
-          >
-            {typeof sidebar.icon === "string" ? (
-              <img
-                src={
-                  location?.pathname === sidebar.link
-                    ? sidebar?.whiteIcon
-                    : sidebar?.icon
-                }
-                className="w-4 h-4 object-contain"
-                alt={`${sidebar.title}-icon`}
-              />
-            ) : (
-              <span className="text-lg">
-                {location?.pathname === sidebar.link
-                  ? sidebar.whiteIcon
-                  : sidebar.icon}
-              </span>
-            )}
+       {sidebarData
+  ?.filter((sidebar) => {
+    // agar roles define hain to wahi show karo
+    if (sidebar.roles) {
+      return sidebar.roles.includes(role);
+    }
+    return true; // default sabke liye
+  })
+  .map((sidebar) => (
+    <NavLink
+      key={sidebar?.link}
+      to={sidebar?.link}
+      className={({ isActive }) =>
+        `flex items-center gap-3 px-3 h-[40px] py-2 mt-4 rounded-[8px] text-[13px] font-medium transition-all ${
+          isActive
+            ? "bg-[#FFFFFF14] text-white"
+            : "text-white hover:bg-[#ffffff0c]"
+        }`
+      }
+    >
+      {typeof sidebar.icon === "string" ? (
+        <img
+          src={
+            location?.pathname === sidebar.link
+              ? sidebar?.whiteIcon
+              : sidebar?.icon
+          }
+          className="w-4 h-4 object-contain"
+          alt={`${sidebar.title}-icon`}
+        />
+      ) : (
+        <span className="text-lg">
+          {location?.pathname === sidebar.link
+            ? sidebar.whiteIcon
+            : sidebar.icon}
+        </span>
+      )}
+      <span>{sidebar?.title}</span>
+    </NavLink>
+))}
 
-            <span>{sidebar?.title}</span>
-          </NavLink>
-        ))}
 
         <button
           onClick={() => setIsOpen(true)}

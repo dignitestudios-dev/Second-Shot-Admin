@@ -11,10 +11,10 @@ const UsersTable = ({
   update,
   setCurrentPage,
   loading,
-  pagination
+  pagination,
 }) => {
   const navigate = useNavigate();
- 
+
   return (
     <div>
       {loading ? (
@@ -34,9 +34,10 @@ const UsersTable = ({
                   {[
                     "Name",
                     "Email Address",
-                    
+                    "Hobbies",
                     "School",
-                    "Created At",
+                    "Sports",
+                    // "Created At",
                     "Action",
                   ].map((header, index) => (
                     <th
@@ -74,16 +75,19 @@ const UsersTable = ({
                     <td className="px-4 text-[14px] py-3 text-[#202224]">
                       {user?.email || "Not Found"}
                     </td>
-                    {/* <td className="px-4 text-[14px] py-3 text-[#202224]">
-                      +1 {phoneFormater(user?.phone) || "Not Found"}
-                    </td> */}
-                   <td className="px-4 max-w-[200px] overflow-hidden truncate whitespace-nowrap text-[14px] py-3 text-[#202224]">
-  {user?.address || "N/A"}
-</td>
-
                     <td className="px-4 text-[14px] py-3 text-[#202224]">
-                      {getDateFormat(user.createdAt)}
+                       {user?.favorite_hobby1 || "Not Found"} / {user?.favorite_hobby2 || "Not Found"}
                     </td>
+                    <td className="px-4 max-w-[200px] overflow-hidden truncate whitespace-nowrap text-[14px] py-3 text-[#202224]">
+                      {user?.school || "N/A"}
+                    </td>
+                    <td className="px-4 max-w-[200px] overflow-hidden truncate whitespace-nowrap text-[14px] py-3 text-[#202224]">
+                      {user?.primary_sport || "N/A"}
+                    </td>
+
+                    {/* <td className="px-4 text-[14px] py-3 text-[#202224]">
+                      {getDateFormat(user.createdAt)}
+                    </td> */}
 
                     <td className="px-4  text-[14px] py-3">
                       <button

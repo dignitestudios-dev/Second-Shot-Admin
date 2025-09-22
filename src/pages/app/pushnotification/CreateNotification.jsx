@@ -9,11 +9,34 @@ import { CreateNotificationSchema } from "../../../schema/app/CreateNotification
 import { CreateNotificationValues } from "../../../init/authentication/CreateNotificationValues";
 import { useCreateNotification } from "../../../hooks/api/Post";
 import { processNotification } from "../../../lib/utils";
+import { useUsers } from "../../../hooks/api/Get";
+import HobbiesDropdown from "../../../components/app/usermanagement/HobbiesDropdown";
 
 const CreateNotification = () => {
   const [startDate, setStartDate] = useState(null); // null se start karein
   const { loading, postData } = useCreateNotification();
   const navigate = useNavigate();
+  const [selectedSport, setSelectedSport] = useState("");
+  const [selectedSchool, setSelectedSchool] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedCareers, setSelectedCareers] = useState(""); // multiple select
+  const [selectedHobbies, setSelectedHobbies] = useState([]); // multiple select
+  const { data: statesCard, loading: statesLoading } =
+    useUsers(`/api/admin/states`);
+  const { data: sportsData, loading: sportLoading } = useUsers(
+    `/api/services/get-sports`
+  );
+  const { data: hobbiesData, loading: hobbiesLoading } = useUsers(
+    `/api/services/get-hobbies`
+  );
+  const { data: schoolsData, loading: schoolsLoading } =
+    useUsers(`/api/admin/schools`);
+  const { data: subjectsData, loading: subjectsLoading } = useUsers(
+    `/api/services/get-subjects`
+  );
+  const { data: careersData, loading: careersLoading } = useUsers(
+    `/api/admin/get-all-careers`
+  );
   const {
     values,
     handleBlur,
@@ -22,7 +45,7 @@ const CreateNotification = () => {
     errors,
     touched,
     setFieldValue,
-    resetForm
+    resetForm,
   } = useFormik({
     initialValues: CreateNotificationValues,
     validationSchema: CreateNotificationSchema,
@@ -73,7 +96,55 @@ const CreateNotification = () => {
           />
           {errors && <p className="text-red-500 text-sm">{errors.title}</p>}
         </div>
-
+        <div>
+          <label className="font-[500] text-[14px]">Sport</label>
+          <select
+            onChange={(e) => setSelectedSport(e.target.value)}
+            className="border border-gray-300 rounded-lg w-full p-2 text-sm max-h-20 overflow-y-auto"
+          >
+            <option value="">All</option>
+            {sportsData?.map((sport) => (
+              <option key={sport.id} value={sport.id}>
+                {sport?.sport_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="font-[500] text-[14px]">School</label>
+          <select
+            onChange={(e) => setSelectedSchool(e.target.value)}
+            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+          >
+            <option value="">All</option>
+            {schoolsData?.map((school) => (
+              <option key={school.id} value={school.id}>
+                {school.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="font-[500] text-[14px]">Carrers</label>
+          <select
+            onChange={(e) => setSelectedCareers(e.target.value)}
+            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+          >
+            <option value="">All</option>
+            {careersData?.map((careers) => (
+              <option key={careers.id} value={careers.id}>
+                {careers?.career_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <HobbiesDropdown
+            hobbiesData={hobbiesData}
+            selectedHobbies={selectedHobbies}
+            setSelectedHobbies={setSelectedHobbies}
+          />
+        </div>
         <div>
           <label className="text-[14px] font-medium text-[#181818] block mb-2">
             Description of Notification
@@ -94,7 +165,6 @@ const CreateNotification = () => {
           )}
         </div>
 
-      
         <div className="flex gap-6">
           <div className="w-[150px]">
             <Button text={"Save"} type={"submit"} loading={loading} />

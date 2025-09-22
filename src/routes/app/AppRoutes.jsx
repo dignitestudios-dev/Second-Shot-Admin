@@ -14,6 +14,7 @@ import PromoCode from "../../pages/app/promocode/PromoCode";
 import PromoTable from "../../components/app/promocode/PromoTable";
 import PromoForm from "../../components/app/promocode/PromoForm";
 import School from "../../pages/app/addschools/School";
+import SubAdmin from "../../pages/app/subadmin/SubAdmin";
 
 export const Approutes = [
   {
@@ -106,6 +107,12 @@ export const Approutes = [
     url: "add-school",
     title: "add-school",
     page: <School />,
+    ispublic: true,
+  },
+  {
+    url: "sub-admin",
+    title: "sub-admin",
+    page: <SubAdmin />,
     ispublic: true,
   },
 ];
