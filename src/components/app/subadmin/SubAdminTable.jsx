@@ -88,7 +88,7 @@ const SubAdminTable = ({
                       </td>
 
                       <td className="px-4 text-[14px] py-3 text-[#202224]">
-                        {user?.email || "Not Found"}`{" "}
+                        {user?.email || "Not Found"}
                       </td>
                       <td className="px-4 text-[14px] py-3 text-[#202224]">
                         {getDateFormat(user?.createdAt || "Not Found")}
