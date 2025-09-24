@@ -13,14 +13,14 @@ import { useUsers } from "../../../hooks/api/Get";
 import HobbiesDropdown from "../../../components/app/usermanagement/HobbiesDropdown";
 
 const CreateNotification = () => {
-  const [startDate, setStartDate] = useState(null); // null se start karein
+  const [startDate, setStartDate] = useState(null); 
   const { loading, postData } = useCreateNotification();
   const navigate = useNavigate();
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedSchool, setSelectedSchool] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
-  const [selectedCareers, setSelectedCareers] = useState(""); // multiple select
-  const [selectedHobbies, setSelectedHobbies] = useState([]); // multiple select
+  const [selectedCareers, setSelectedCareers] = useState("");
+  const [selectedHobbies, setSelectedHobbies] = useState([]);
   const { data: statesCard, loading: statesLoading } =
     useUsers(`/api/admin/states`);
   const { data: sportsData, loading: sportLoading } = useUsers(
@@ -55,9 +55,13 @@ const CreateNotification = () => {
       const data = {
         notification_title: values.title,
         notification_message: values.description,
+        school: selectedSchool,
+        sport: selectedSport,
+        hobby: selectedHobbies,
+        career: selectedCareers,
       };
       postData(
-        "/api/admin/send-notification",
+        "/api/admin/send-conditional-notification",
         false,
         null,
         data,
@@ -97,55 +101,6 @@ const CreateNotification = () => {
           {errors && <p className="text-red-500 text-sm">{errors.title}</p>}
         </div>
         <div>
-          <label className="font-[500] text-[14px]">Sport</label>
-          <select
-            onChange={(e) => setSelectedSport(e.target.value)}
-            className="border border-gray-300 rounded-lg w-full p-2 text-sm max-h-20 overflow-y-auto"
-          >
-            <option value="">All</option>
-            {sportsData?.map((sport) => (
-              <option key={sport.id} value={sport.id}>
-                {sport?.sport_name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="font-[500] text-[14px]">School</label>
-          <select
-            onChange={(e) => setSelectedSchool(e.target.value)}
-            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
-          >
-            <option value="">All</option>
-            {schoolsData?.map((school) => (
-              <option key={school.id} value={school.id}>
-                {school.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="font-[500] text-[14px]">Carrers</label>
-          <select
-            onChange={(e) => setSelectedCareers(e.target.value)}
-            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
-          >
-            <option value="">All</option>
-            {careersData?.map((careers) => (
-              <option key={careers.id} value={careers.id}>
-                {careers?.career_name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <HobbiesDropdown
-            hobbiesData={hobbiesData}
-            selectedHobbies={selectedHobbies}
-            setSelectedHobbies={setSelectedHobbies}
-          />
-        </div>
-        <div>
           <label className="text-[14px] font-medium text-[#181818] block mb-2">
             Description of Notification
           </label>
@@ -163,6 +118,60 @@ const CreateNotification = () => {
           {errors && (
             <p className="text-red-500 text-sm">{errors.description}</p>
           )}
+        </div>
+        <div>
+          <label className="font-[500] text-[14px]">School</label>
+          <select
+            onChange={(e) => setSelectedSchool(e.target.value)}
+            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+          >
+            <option value="">All</option>
+            {schoolsData?.map((school) => (
+              <option key={school.id} value={school.name}>
+                {school.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="font-[500] text-[14px]">Sport</label>
+          <select
+            onChange={(e) => setSelectedSport(e.target.value)}
+            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+          >
+            <option value="">All</option>
+            {sportsData?.map((sport) => (
+              <option key={sport._id} value={sport._id}>
+                {" "}
+                {console.log(sport, "sport")}
+                {/* id send */}
+                {sport?.sport_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="font-[500] text-[14px]">Carrers</label>
+          <select
+            onChange={(e) => setSelectedCareers(e.target.value)}
+            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+          >
+            <option value="">All</option>
+            {careersData?.map((careers) => (
+              <option key={careers._id} value={careers._id}>
+                {careers?.career_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <HobbiesDropdown
+            hobbiesData={hobbiesData}
+            selectedHobbies={selectedHobbies}
+            setSelectedHobbies={setSelectedHobbies}
+            valueKey="_id"
+          />
         </div>
 
         <div className="flex gap-6">

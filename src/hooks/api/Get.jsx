@@ -52,9 +52,16 @@ const useFilterUsers = (url, currentPage = 1, filters = {}, search, update) => {
       if (currentPage) params.append("page", currentPage);
 
       // add rest of filters dynamically
+      // add rest of filters dynamically
       Object.keys(filters).forEach((key) => {
         if (filters[key] && key !== "startDate" && key !== "endDate") {
-          params.append(key, encodeURIComponent(filters[key]));
+          if (Array.isArray(filters[key])) {
+            filters[key].forEach((val) => {
+              params.append(key, val); // 👈 alag alag append
+            });
+          } else {
+            params.append(key, filters[key]);
+          }
         }
       });
 

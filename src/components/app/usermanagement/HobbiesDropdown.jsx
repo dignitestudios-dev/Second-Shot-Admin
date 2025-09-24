@@ -1,31 +1,38 @@
 import { useState } from "react";
 
-export default function HobbiesDropdown({ hobbiesData, selectedHobbies, setSelectedHobbies }) {
+export default function HobbiesDropdown({
+  hobbiesData,
+  selectedHobbies,
+  setSelectedHobbies,
+  valueKey = "hobbie_name", // default: name, override: id
+}) {
   const [open, setOpen] = useState(false);
 
   const handleSelect = (hobby) => {
-    if (selectedHobbies.includes(hobby.hobbie_name)) {
-      // agar already select hai to remove kar do
-      setSelectedHobbies(selectedHobbies.filter((name) => name !== hobby.hobbie_name));
+    const value = hobby[valueKey]; // yahan id ya name aayega
+
+    if (selectedHobbies.includes(value)) {
+      setSelectedHobbies(selectedHobbies.filter((item) => item !== value));
     } else {
-      // warna add kar do
-      setSelectedHobbies([...selectedHobbies, hobby.hobbie_name]);
+      setSelectedHobbies([...selectedHobbies, value]);
     }
   };
 
   return (
     <div className="relative w-full">
-     <label className="font-[500] text-[14px]">Hobbies</label>
+      <label className="font-[500] text-[14px]">Hobbies</label>
       <div
         className="border rounded-lg px-3 py-2 bg-white cursor-pointer"
         onClick={() => setOpen(!open)}
       >
         {selectedHobbies.length > 0
-          ? selectedHobbies.join(", ") // show names instead of count
+          ? hobbiesData
+              ?.filter((hobby) => selectedHobbies.includes(hobby[valueKey]))
+              .map((hobby) => hobby.hobbie_name)
+              .join(", ")
           : "Select hobbies"}
       </div>
 
-      {/* Dropdown Menu */}
       {open && (
         <div className="absolute mt-1 w-full bg-white border rounded-lg shadow-lg z-20 max-h-40 overflow-y-auto">
           {hobbiesData?.map((hobby) => (
@@ -36,7 +43,7 @@ export default function HobbiesDropdown({ hobbiesData, selectedHobbies, setSelec
               <input
                 type="checkbox"
                 className="mr-2"
-                checked={selectedHobbies.includes(hobby.hobbie_name)}
+                checked={selectedHobbies.includes(hobby[valueKey])}
                 onChange={() => handleSelect(hobby)}
               />
               {hobby.hobbie_name}

@@ -54,8 +54,7 @@ const UserManagement = () => {
       primary_sport: selectedSport || "",
       school: selectedSchool || "",
       subject: selectedSubject || "",
-      favorite_hobby:
-        selectedHobbies.length > 0 ? selectedHobbies.join(",") : "",
+      favorite_hobby: selectedHobbies.length > 0 ? selectedHobbies : "",
       idp_answer: idpAnswer || "",
       career_name: selectedCareers || "",
     },
