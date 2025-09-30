@@ -124,7 +124,7 @@ export default function Filter({
                   </select>
                 </div> */}
                 <div>
-                  <label className="font-[500] text-[14px]">Carrers</label>
+                  <label className="font-[500] text-[14px]">Careers</label>
                   <select
                     onChange={(e) => setSelectedCareers(e.target.value)}
                     className="border border-gray-300 rounded-lg w-full p-2 text-sm"
