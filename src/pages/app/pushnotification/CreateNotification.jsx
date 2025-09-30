@@ -13,8 +13,9 @@ import { useUsers } from "../../../hooks/api/Get";
 import HobbiesDropdown from "../../../components/app/usermanagement/HobbiesDropdown";
 
 const CreateNotification = () => {
-  const [startDate, setStartDate] = useState(null); 
+  const [startDate, setStartDate] = useState(null);
   const { loading, postData } = useCreateNotification();
+  const [useConditional, setUseConditional] = useState(false);
   const navigate = useNavigate();
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedSchool, setSelectedSchool] = useState("");
@@ -39,39 +40,52 @@ const CreateNotification = () => {
   );
   const {
     values,
-    handleBlur,
     handleChange,
+    handleBlur,
     handleSubmit,
     errors,
     touched,
-    setFieldValue,
     resetForm,
   } = useFormik({
-    initialValues: CreateNotificationValues,
-    validationSchema: CreateNotificationSchema,
+    initialValues: { title: "", description: "" },
     validateOnChange: true,
     validateOnBlur: true,
-    onSubmit: async (values, action) => {
-      const data = {
-        notification_title: values.title,
-        notification_message: values.description,
-        school: selectedSchool,
-        sport: selectedSport,
-        hobby: selectedHobbies,
-        career: selectedCareers,
-      };
-      postData(
-        "/api/admin/send-conditional-notification",
-        false,
-        null,
-        data,
-        processNotification,
-        resetForm
-      );
+    onSubmit: async (values) => {
+      if (useConditional) {
+        const data = {
+          notification_title: values.title,
+          notification_message: values.description,
+          school: selectedSchool,
+          sport: selectedSport,
+          hobby: selectedHobbies,
+          career: selectedCareers,
+        };
+        postData(
+          "/api/admin/send-conditional-notification",
+          false,
+          null,
+          data,
+          processNotification,
+          resetForm
+        );
+      } else {
+        const data = {
+          notification_title: values.title,
+          notification_message: values.description,
+        };
+        postData(
+          "/api/admin/send-notification",
+          false,
+          null,
+          data,
+          processNotification,
+          resetForm
+        );
+      }
     },
   });
   return (
-    <div className="bg-white rounded-[20px] p-3 h-screen">
+    <div className="bg-white rounded-[20px] p-3 ">
       <div className="flex items-center gap-3 mb-6">
         <button className="text-[28px]" onClick={() => navigate(-1)}>
           <IoIosArrowRoundBack />
@@ -119,60 +133,76 @@ const CreateNotification = () => {
             <p className="text-red-500 text-sm">{errors.description}</p>
           )}
         </div>
-        <div>
-          <label className="font-[500] text-[14px]">School</label>
-          <select
-            onChange={(e) => setSelectedSchool(e.target.value)}
-            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
-          >
-            <option value="">All</option>
-            {schoolsData?.map((school) => (
-              <option key={school.id} value={school.name}>
-                {school.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="font-[500] text-[14px]">Sport</label>
-          <select
-            onChange={(e) => setSelectedSport(e.target.value)}
-            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
-          >
-            <option value="">All</option>
-            {sportsData?.map((sport) => (
-              <option key={sport._id} value={sport._id}>
-                {" "}
-                {console.log(sport, "sport")}
-                {/* id send */}
-                {sport?.sport_name}
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="conditional"
+            checked={useConditional}
+            onChange={() => setUseConditional(!useConditional)}
+          />
+          <label htmlFor="conditional">
+            Send to specific school, hobby, sport or career
+          </label>
         </div>
 
-        <div>
-          <label className="font-[500] text-[14px]">Carrers</label>
-          <select
-            onChange={(e) => setSelectedCareers(e.target.value)}
-            className="border border-gray-300 rounded-lg w-full p-2 text-sm"
-          >
-            <option value="">All</option>
-            {careersData?.map((careers) => (
-              <option key={careers._id} value={careers._id}>
-                {careers?.career_name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <HobbiesDropdown
-            hobbiesData={hobbiesData}
-            selectedHobbies={selectedHobbies}
-            setSelectedHobbies={setSelectedHobbies}
-            valueKey="_id"
-          />
-        </div>
+        {useConditional && (
+          <div className="space-y-4">
+            <div>
+              <label className="font-[500] text-[14px]">School</label>
+              <select
+                onChange={(e) => setSelectedSchool(e.target.value)}
+                className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+              >
+                <option value="">All</option>
+                {schoolsData?.map((school) => (
+                  <option key={school.id} value={school.name}>
+                    {school.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="font-[500] text-[14px]">Sport</label>
+              <select
+                onChange={(e) => setSelectedSport(e.target.value)}
+                className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+              >
+                <option value="">All</option>
+                {sportsData?.map((sport) => (
+                  <option key={sport._id} value={sport._id}>
+                    {" "}
+                    {console.log(sport, "sport")}
+                    {/* id send */}
+                    {sport?.sport_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="font-[500] text-[14px]">Carrers</label>
+              <select
+                onChange={(e) => setSelectedCareers(e.target.value)}
+                className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+              >
+                <option value="">All</option>
+                {careersData?.map((careers) => (
+                  <option key={careers._id} value={careers._id}>
+                    {careers?.career_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <HobbiesDropdown
+                hobbiesData={hobbiesData}
+                selectedHobbies={selectedHobbies}
+                setSelectedHobbies={setSelectedHobbies}
+                valueKey="_id"
+              />
+            </div>
+          </div>
+        )}
 
         <div className="flex gap-6">
           <div className="w-[150px]">
