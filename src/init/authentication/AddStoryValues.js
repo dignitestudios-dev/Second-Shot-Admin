@@ -7,6 +7,8 @@ export const AddStoryValues = {
   linkedin_link: "",
   youTubelink: "",
   school: "",
-    career_recommendations: [], // ✅ empty array by default
-  careerDropdownOpen: false,  // ✅ dropdown state bhi initialize karo
+  career_recommendations: [], 
+  careerDropdownOpen: false, 
+  sports:[],
+  sportsDropdownOpen: false,
 };

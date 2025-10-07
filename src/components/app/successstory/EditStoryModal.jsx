@@ -24,8 +24,8 @@ const EditStoryModal = ({
     loading: loader,
     pagination,
   } = useGetSuccess(`/api/admin/career-list`);
+  const { data: schoolData } = useGetSuccess(`/api/services/get-sports`);
   const [initialValues, setInitialValues] = useState(AddStoryValues);
-
 
   useEffect(() => {
     if (data) {
@@ -40,6 +40,7 @@ const EditStoryModal = ({
         currentProfession: data?.current_profession || "",
         school: data?.school || "",
         career_recommendations: data?.career_recommendations || [],
+        sport: data?.sport || [],
       });
 
       if (data?.profile_img) {
@@ -72,6 +73,10 @@ const EditStoryModal = ({
             }),
 
       fullname: Yup.string().required("Full name is required").min(3).max(250),
+      sport: Yup.array()
+        .of(Yup.string().required())
+        .min(1, "At least one sport is required")
+        .required("Sport is required"),
 
       quote: Yup.string().required("Quote is required").min(3).max(250),
 
@@ -101,7 +106,6 @@ const EditStoryModal = ({
     validateOnBlur: true,
 
     onSubmit: async (values, action) => {
-  
       const formData = new FormData();
       formData.append("profile_img", values.uploadPicture);
       formData.append("name", values.fullname);
@@ -114,6 +118,7 @@ const EditStoryModal = ({
         "career_recommendations",
         JSON.stringify(values.career_recommendations)
       );
+      formData.append("sport", JSON.stringify(values.sport));
       postData(
         `/api/admin/update-success-story/${data?._id}`,
         true,
@@ -245,6 +250,112 @@ const EditStoryModal = ({
                 </div>
 
                 <div>
+                   <div className="mt-4">
+                    <Input
+                      value={values.school}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      id={"school"}
+                      name={"school"}
+                      text={"School"}
+                      placeholder={"School"}
+                      error={errors.school}
+                    />
+                  </div>
+                  <div className="mt-1">
+                    <label
+                      htmlFor="sport"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Select Sports
+                    </label>
+
+                    {/* Dropdown toggle */}
+                    <div
+                      onClick={() =>
+                        setFieldValue(
+                          "sportsDropdownOpen",
+                          !values?.sportsDropdownOpen
+                        )
+                      }
+                      className="h-[49px] border border-[#9A9A9A] rounded-lg px-3 py-2 flex items-center justify-between cursor-pointer"
+                    >
+                      <span className="text-sm text-gray-700">
+                        {values?.sport?.length > 0
+                          ? `${values?.sport?.length} selected`
+                          : "Select Sports"}
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`h-4 w-4 transform transition-transform ${
+                          values?.sportsDropdownOpen ? "rotate-180" : ""
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+
+                    {/* Dropdown options */}
+                    {values?.sportsDropdownOpen && (
+                      <div className="mt-1 w-full max-h-48 overflow-auto bg-white border border-gray-300 rounded-lg shadow-lg">
+                        {schoolData?.data?.map((item) => (
+                          <label
+                            key={item._id}
+                            className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              value={item?.sport_name}
+                              checked={values?.sport?.includes(
+                                item?.sport_name
+                              )}
+                              onChange={(e) => {
+                                const currentValues = values?.sport || [];
+                                if (e.target.checked) {
+                                  setFieldValue("sport", [
+                                    ...currentValues,
+                                    item?.sport_name,
+                                  ]);
+                                } else {
+                                  setFieldValue(
+                                    "sport",
+                                    currentValues.filter(
+                                      (name) => name !== item.sport_name
+                                    )
+                                  );
+                                }
+                              }}
+                              className="mr-2"
+                            />
+                            {item?.sport_name}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Selected chips */}
+                    {values?.sport?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {values?.sport?.map((name) => (
+                          <span
+                            key={name}
+                            className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs"
+                          >
+                            {name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="mt-1">
                     <label
                       htmlFor="career"
@@ -342,18 +453,7 @@ const EditStoryModal = ({
                       </div>
                     )}
                   </div>
-                  <div className="mt-4">
-                    <Input
-                      value={values.school}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      id={"school"}
-                      name={"school"}
-                      text={"School"}
-                      placeholder={"School"}
-                      error={errors.school}
-                    />
-                  </div>
+                 
                   <div>
                     <div className="mt-4">
                       <TextArea
