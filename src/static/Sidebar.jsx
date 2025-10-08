@@ -54,6 +54,7 @@ export const sidebarData = [
     icon: <FaTag />,
     whiteIcon: <FaTag />,
     link: "/app/promo-code",
+    roles: ["admin"],
   },
   {
     title: "Add School",

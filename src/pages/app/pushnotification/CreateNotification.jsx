@@ -153,7 +153,7 @@ const CreateNotification = () => {
                 onChange={(e) => setSelectedSchool(e.target.value)}
                 className="border border-gray-300 rounded-lg w-full p-2 text-sm"
               >
-                <option value="">All</option>
+                <option value="">None</option>
                 {schoolsData?.map((school) => (
                   <option key={school.id} value={school.name}>
                     {school.name}
@@ -167,7 +167,7 @@ const CreateNotification = () => {
                 onChange={(e) => setSelectedSport(e.target.value)}
                 className="border border-gray-300 rounded-lg w-full p-2 text-sm"
               >
-                <option value="">All</option>
+                <option value="">None</option>
                 {sportsData?.map((sport) => (
                   <option key={sport._id} value={sport._id}>
                     {" "}
@@ -185,7 +185,7 @@ const CreateNotification = () => {
                 onChange={(e) => setSelectedCareers(e.target.value)}
                 className="border border-gray-300 rounded-lg w-full p-2 text-sm"
               >
-                <option value="">All</option>
+                <option value="">None</option>
                 {careersData?.map((careers) => (
                   <option key={careers._id} value={careers._id}>
                     {careers?.career_name}

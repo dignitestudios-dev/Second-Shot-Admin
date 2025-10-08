@@ -83,7 +83,7 @@ export default function Filter({
                     onChange={(e) => setSelectedSport(e.target.value)}
                     className="border border-gray-300 rounded-lg w-full p-2 text-sm"
                   >
-                    <option value="">All</option>
+                    <option value="">None</option>
                     {sportsData?.map((sport) => (
                       <option key={sport.id} value={sport.id}>
                         {sport?.sport_name}
@@ -99,7 +99,7 @@ export default function Filter({
                     onChange={(e) => setSelectedSchool(e.target.value)}
                     className="border border-gray-300 rounded-lg w-full p-2 text-sm"
                   >
-                    <option value="">All</option>
+                    <option value="">None</option>
                     {schoolsData?.map((school) => (
                       <option key={school.id} value={school.id}>
                         {school.name}
@@ -129,7 +129,7 @@ export default function Filter({
                     onChange={(e) => setSelectedCareers(e.target.value)}
                     className="border border-gray-300 rounded-lg w-full p-2 text-sm"
                   >
-                    <option value="">All</option>
+                    <option value="">None</option>
                     {careersData?.map((careers) => (
                       <option key={careers.id} value={careers.id}>
                         {careers?.career_name}
