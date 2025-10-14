@@ -49,7 +49,7 @@ const PromoTable = () => {
         <h2 className="text-[28px] font-[600]  ">Promos Code </h2>
         <div>
           <Button
-            text={"Create Coupen Code"}
+            text={"Create Coupon Code"}
             handleSubmit={() => navigate("/app/generate-promo-code")}
           />
         </div>
@@ -64,7 +64,7 @@ const PromoTable = () => {
                 <tr>
                   {[
                     "#",
-                    "Coupen Code",
+                    "Coupon Code",
                     "Percentage",
                     "Created At",
                     "Action",
