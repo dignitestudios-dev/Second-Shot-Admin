@@ -293,7 +293,7 @@ const AddStoryModal = ({ showModal, handleClose, setOpen, setUpdate }) => {
                       htmlFor="career"
                       className="block text-sm font-medium text-gray-700 mb-2"
                     >
-                      Select Career(s)
+                      Select Careers
                     </label>
 
                     <div
@@ -308,7 +308,7 @@ const AddStoryModal = ({ showModal, handleClose, setOpen, setUpdate }) => {
                       <span className="text-sm text-gray-700">
                         {values?.career_recommendations?.length > 0
                           ? `${values?.career_recommendations?.length} selected`
-                          : "Select Career(s)"}
+                          : "Select Careers"}
                       </span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
