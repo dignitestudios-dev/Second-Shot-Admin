@@ -61,7 +61,7 @@ const UserManagement = () => {
     search || "",
     update
   );
-
+console.log(data,"datadata")
   const usageCards = [
     {
       key: "todayRegisteredUsers",

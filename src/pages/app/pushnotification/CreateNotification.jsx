@@ -147,7 +147,7 @@ const CreateNotification = () => {
 
         {useConditional && (
           <div className="space-y-4">
-            <div>
+            {/* <div>
               <label className="font-[500] text-[14px]">School</label>
               <select
                 onChange={(e) => setSelectedSchool(e.target.value)}
@@ -160,7 +160,7 @@ const CreateNotification = () => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
             <div>
               <label className="font-[500] text-[14px]">Sport</label>
               <select
@@ -179,7 +179,7 @@ const CreateNotification = () => {
               </select>
             </div>
 
-            <div>
+            {/* <div>
               <label className="font-[500] text-[14px]">Careers</label>
               <select
                 onChange={(e) => setSelectedCareers(e.target.value)}
@@ -192,15 +192,15 @@ const CreateNotification = () => {
                   </option>
                 ))}
               </select>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <HobbiesDropdown
                 hobbiesData={hobbiesData}
                 selectedHobbies={selectedHobbies}
                 setSelectedHobbies={setSelectedHobbies}
                 valueKey="_id"
               />
-            </div>
+            </div> */}
           </div>
         )}
 

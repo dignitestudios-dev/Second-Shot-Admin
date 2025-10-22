@@ -19,12 +19,8 @@ export const CreateNotificationSchema = Yup.object({
 export const promoCode = Yup.object().shape({
   name: Yup.string()
     .required("Promo name is required")
-    .max(50, "Promo name can't be longer than 50 characters")
-    .matches(
-      /^[^\s\d][A-Za-z0-9\s]*$/,
-      "Name cannot start with space or number"
-    ),
-
+    .max(50, "Promo name can't be longer than 50 characters"),
+    
   percent_off: Yup.number()
     .typeError("Percent must be a number")
     .required("Percent off is required")

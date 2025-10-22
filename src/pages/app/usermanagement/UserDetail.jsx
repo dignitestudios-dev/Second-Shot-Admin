@@ -23,8 +23,8 @@ const UserDetail = () => {
   const [resumeFiltered, setResumeFiltered] = useState("");
   const [resumeQuery, setResumeQuery] = useState("");
   const { state } = useLocation();
-  const { user } = state  || {};
-
+  const { user } = state || {};
+  console.log(user);
   const { data: transferableSkill, loading: skillsLoader } = useUsers(
     `/api/admin/user-transferable-skills/${user?._id}`
   );
@@ -126,8 +126,7 @@ const UserDetail = () => {
           <div>
             <p className="text-[#565656] text-[16px]">Phone Number</p>
             <p className="text-[16px] font-medium text-[#0F0F0F] text-nowrap">
-            {user?.phone ? `+1 ${phoneFormater(user.phone)}` : "N/A"}
-
+              {user?.phone ? `+1 ${phoneFormater(user.phone)}` : "N/A"}
             </p>
           </div>
           <div>
@@ -138,13 +137,17 @@ const UserDetail = () => {
           </div>
           <div>
             <p className="text-[#565656] text-[16px] ">Subscription</p>
-            <p className="text-[16px] font-medium text-[#0F0F0F] text-nowrap">
-              {user?.current_subscription_plan === "yearly_plan"
-                ? "Yearly"
-                : user?.current_subscription_plan ||
-                  user?.current_subscription_plan === "3-month"
-                ? "Quarterly"
-                : user?.current_subscription_plan || "No Subscription"}
+            <p className="text-[16px] font-medium text-[#0F0F0F] text-wrap">
+             {
+  user?.current_subscription_plan === "yearly_plan"
+    ? "Yearly"
+    : user?.current_subscription_plan === "3-month"
+    ? "Quarterly"
+    : user?.current_subscription_plan === "access-code"
+    ? "Purchased Using Access Code"
+    : ""
+}
+
             </p>
           </div>
         </div>
@@ -188,13 +191,12 @@ const UserDetail = () => {
           {skillsLoader ? (
             <TranfserableSkeleton />
           ) : transferableSkill ? (
-             <TransferableSkill
+            <TransferableSkill
               transferableSkill={transferableSkill}
               skillsLoader={skillsLoader}
             />
-            
           ) : (
-           <div className="text-center  h-[270px] flex justify-center items-center">
+            <div className="text-center  h-[270px] flex justify-center items-center">
               No Transferable Skills Found
             </div>
           )}

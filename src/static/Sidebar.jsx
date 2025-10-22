@@ -61,5 +61,6 @@ export const sidebarData = [
     icon: <BiSolidSchool />,
     whiteIcon: <BiSolidSchool />,
     link: "/app/add-school",
+      roles: ["admin"],
   },
 ];

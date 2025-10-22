@@ -13,12 +13,42 @@ const TransferableSkill = ({ transferableSkill, skillsLoader }) => {
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Sport:{" "}
+              {/* <span className="font-semibold ">
+                {transferableSkill?.athlete?.primary_sport?.sport_name}
+              </span> */}
+            </h2>
+            <h3 className="text-xl font-semibold text-gray-700 mb-4">
+             Primary Sport:{" "}
+              <span className="font-medium text-gray-600">
+                {transferableSkill?.athlete?.primary_sport?.sport_name}
+              </span>
+            </h3>
+            <ol className="list-decimal ml-6 space-y-3">
+              {transferableSkill?.athlete?.primary_sport?.topics?.map(
+                (item, index) => (
+                  <li
+                    key={index}
+                    className="text-lg font-semibold text-gray-800"
+                  >
+                    {item?.title}
+                    <p className="ml-4 font-normal text-gray-600 text-base mt-1">
+                      {item?.description}
+                    </p>
+                  </li>
+                )
+              )}
+            </ol>
+          </div>
+          <div>
+            {/* <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Sport:{" "}
               <span className="font-semibold ">
                 {transferableSkill?.athlete?.primary_sport?.sport_name}
               </span>
-            </h2>
+            </h2> */}
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
-              Position:{" "}
+             Sport position
+:{" "}
               <span className="font-medium text-gray-600">
                 {transferableSkill?.athlete?.sport_position?.position_name}
               </span>
