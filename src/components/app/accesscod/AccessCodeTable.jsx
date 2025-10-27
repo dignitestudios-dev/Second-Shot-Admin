@@ -7,6 +7,8 @@ import Pagination from "../../global/Pagination";
 import SkeletonTable from "../../global/SkeletonTable";
 import Button from "../../global/Button";
 import AccessCodeModal from "./AccessCodeModal";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const AccessCodeTable = () => {
   const [accessloader, setAccessLoading] = useState(false);
@@ -54,6 +56,37 @@ const AccessCodeTable = () => {
       setAccessLoading(false);
     }
   };
+  const handleDownloadPDF = () => {
+    if (!filteredCodes || filteredCodes.length === 0) {
+      ErrorToast("No active codes to download!");
+      return;
+    }
+
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Active Access Codes", 14, 15);
+
+    const tableColumn = ["#", "Access Code", "Status"];
+    const tableRows = [];
+
+    filteredCodes.forEach((item, index) => {
+      const codeData = [
+        index + 1,
+        item.code,
+        item.is_used ? "Expired" : "Active",
+      ];
+      tableRows.push(codeData);
+    });
+
+    // ✅ Correct usage for ES modules
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 25,
+    });
+
+    doc.save("Active_Access_Codes.pdf");
+  };
 
   // ✅ Filter Codes Based on Active Tab
   const filteredCodes =
@@ -66,7 +99,7 @@ const AccessCodeTable = () => {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h2 className="text-[28px] font-[600]">Access Codes</h2>
 
-        <div className="flex items-end gap-3 flex-wrap">
+        <div className="flex items-end gap-3 ">
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold text-sm mb-1">
               Number of Codes
@@ -87,6 +120,17 @@ const AccessCodeTable = () => {
           />
         </div>
       </div>
+      {activeTab === "active" && (
+        <div className="flex justify-end  mt-4">
+          <div className=" w-[250px]  mt-4">
+            <Button
+              text="Download Access Code PDF"
+              handleSubmit={handleDownloadPDF}
+              loading={false}
+            />
+          </div>
+        </div>
+      )}
 
       {/* 🔹 Tabs Section */}
       <div className="flex gap-6 mt-6 border-b border-gray-200">

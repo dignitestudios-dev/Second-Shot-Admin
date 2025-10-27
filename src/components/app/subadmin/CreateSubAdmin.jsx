@@ -5,17 +5,22 @@ import Button from "../../global/Button";
 import { createSubAdminSchema } from "../../../schema/app/CreateNotificationSchema";
 import Input from "../../global/Input";
 import { useFormik } from "formik";
+import { useUsers } from "../../../hooks/api/Get";
 
 const CreateSubAdmin = ({ isOpen, onClose, setUpdate }) => {
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
+  const [selectedSchool, setSelectedSchool] = useState("");
 
+  const { data: schoolsData, loading: schoolsLoading } =
+    useUsers(`/api/admin/schools`);
   const { values, handleBlur, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
       name: "",
       email: "",
       password: "",
       confirm_password: "",
+      school: "",
     },
     validationSchema: createSubAdminSchema,
     validateOnChange: true,
@@ -28,6 +33,7 @@ const CreateSubAdmin = ({ isOpen, onClose, setUpdate }) => {
         password: values.password,
         confirm_password: values.confirm_password,
         role: "sub-admin",
+        school: selectedSchool,
       };
       try {
         const res = await axios.post("/api/auth/admin/sign-up", payload);
@@ -87,6 +93,20 @@ const CreateSubAdmin = ({ isOpen, onClose, setUpdate }) => {
               error={errors.email}
               placeholder="Enter Email"
             />
+          </div>
+          <div>
+            <label className="font-[500] text-[14px]">School</label>
+            <select
+              onChange={(e) => setSelectedSchool(e.target.value)}
+              className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+            >
+              <option value="">None</option>
+              {schoolsData?.map((school) => (
+                <option key={school.id} value={school.name}>
+                  {school.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>

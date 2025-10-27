@@ -1,11 +1,4 @@
 import React, { useState } from "react";
-import {
-  FilterIcon,
-  SearchIcon,
-  SubsIcon,
-  Userprofile,
-} from "../../../assets/export";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Pagination from "../../../components/global/Pagination";
 import UsersTable from "../../../components/app/usermanagement/UsersTable";
 import Filter from "../../../components/global/Filter";
@@ -13,7 +6,8 @@ import { useFilterUsers, useUsers } from "../../../hooks/api/Get";
 import SearchInput from "../../../components/global/SearchInput";
 import { FaCalendarWeek, FaUserPlus } from "react-icons/fa6";
 import { FaCalendarAlt } from "react-icons/fa";
-
+import { ErrorToast, SuccessToast } from "../../../components/global/Toaster";
+import axios from "../../../axios";
 const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [update, setUpdate] = useState(false);
@@ -27,6 +21,7 @@ const UserManagement = () => {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedCareers, setSelectedCareers] = useState(""); // multiple select
   const [selectedHobbies, setSelectedHobbies] = useState([]); // multiple select
+  const [blockLoading, setBlockLoading] = useState(false); // multiple select
 
   const { data: statesCard, loading: statesLoading } =
     useUsers(`/api/admin/states`);
@@ -61,7 +56,7 @@ const UserManagement = () => {
     search || "",
     update
   );
-console.log(data,"datadata")
+
   const usageCards = [
     {
       key: "todayRegisteredUsers",
@@ -99,9 +94,30 @@ console.log(data,"datadata")
     setSelectedHobbies([]);
     setUpdate((prev) => !prev);
   };
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
     setUpdate((prev) => !prev);
+  };
+  const handleBlockUser = async (userId, isBlocked) => {
+    try {
+      setBlockLoading(userId);
+
+      // 🔄 Use PUT request (as per your API)
+      const response = await axios.put(`/api/admin/user/${userId}`);
+
+      if (response.status === 200) {
+        SuccessToast(
+          response?.data?.message || "User status updated successfully!"
+        );
+        setUpdate((prev) => !prev); // refresh table or state
+      }
+    } catch (error) {
+      console.error("Error blocking/unblocking user:", error);
+      ErrorToast(error?.response?.data?.message || "Something went wrong!");
+    } finally {
+      setBlockLoading(false);
+    }
   };
   return (
     <div>
@@ -171,6 +187,8 @@ console.log(data,"datadata")
           setUpdate={setUpdate}
           loading={loading}
           pagination={pagination}
+          handleBlockUser={handleBlockUser}
+          blockLoading={blockLoading}
         />
       </div>
     </div>
