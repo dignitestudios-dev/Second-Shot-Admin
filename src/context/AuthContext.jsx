@@ -10,6 +10,7 @@ const AuthProvider = ({ children }) => {
   const [name, setName] = useState(Cookies.get("name"));
   const [email, setEmail] = useState(Cookies.get("email"));
   const [role, setRole] = useState(Cookies.get("role"));
+  const [school, setSchool] = useState(Cookies.get("role"));
   const [timer, setTimer] = useState(30);
   const [resendTime, setResendTime] = useState(false);
   const loginAuth = (data) => {
@@ -18,12 +19,14 @@ const AuthProvider = ({ children }) => {
       Cookies.set("name", data?.data?.name);
       Cookies.set("email", data?.data?.email);
       Cookies.set("role", data?.data?.role);
+      Cookies.set("school", data?.data?.school);
       //   Cookies.set("profilePicture", data?.data?.userRecord?.profilePicture);
 
       setToken(data?.data?.token);
       setName(data?.data?.name);
       setEmail(data?.data?.email);
       setRole(data?.data?.role);
+      setSchool(data?.data?.school);
     }
   };
   const startTimer = () => {
@@ -44,6 +47,7 @@ const AuthProvider = ({ children }) => {
     Cookies.remove("token");
     Cookies.remove("name");
     Cookies.remove("email");
+    Cookies.remove("school");
     // Cookies.clear();
     setToken(null);
     navigate("/auth/login");
@@ -69,6 +73,7 @@ const AuthProvider = ({ children }) => {
         timer,
         role,
         setResendTime,
+        school,
       }}
     >
       {children}

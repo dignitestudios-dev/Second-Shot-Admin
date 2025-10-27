@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Pagination from "../../../components/global/Pagination";
 import UsersTable from "../../../components/app/usermanagement/UsersTable";
 import Filter from "../../../components/global/Filter";
@@ -8,7 +8,10 @@ import { FaCalendarWeek, FaUserPlus } from "react-icons/fa6";
 import { FaCalendarAlt } from "react-icons/fa";
 import { ErrorToast, SuccessToast } from "../../../components/global/Toaster";
 import axios from "../../../axios";
+import { AuthContext } from "../../../context/AuthContext";
 const UserManagement = () => {
+  const { school } = useContext(AuthContext);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [update, setUpdate] = useState(false);
   const [startDate, setStartDate] = useState();
@@ -47,7 +50,7 @@ const UserManagement = () => {
       startDate: startDate || "",
       endDate: endDate || "",
       primary_sport: selectedSport || "",
-      school: selectedSchool || "",
+      school: school || selectedSchool || "",
       subject: selectedSubject || "",
       favorite_hobby: selectedHobbies.length > 0 ? selectedHobbies : "",
       idp_answer: idpAnswer || "",
@@ -138,8 +141,9 @@ const UserManagement = () => {
                 endDate={endDate}
                 showExtraFilters={true}
                 sportsData={sportsData}
-                schoolsData={schoolsData}
+                schoolsData={school ? [school] : schoolsData}
                 subjectsData={subjectsData}
+                disableSchoolSelect={!!school} // agar school context se mila hai toh dropdown disable
                 hobbiesData={hobbiesData}
                 setSelectedSport={setSelectedSport}
                 setSelectedSchool={setSelectedSchool}

@@ -23,6 +23,7 @@ export default function Filter({
   selectedHobbies = [],
   careersData,
   setSelectedCareers,
+  disableSchoolSelect,
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -96,6 +97,7 @@ export default function Filter({
                 <div>
                   <label className="font-[500] text-[14px]">School</label>
                   <select
+                    disabled={disableSchoolSelect}
                     onChange={(e) => setSelectedSchool(e.target.value)}
                     className="border border-gray-300 rounded-lg w-full p-2 text-sm"
                   >
