@@ -16,6 +16,7 @@ export const sidebarData = [
     icon: DashboardIcon,
     whiteIcon: DashboardIcon,
     link: "/app/home",
+    roles: ["admin"],
   },
   {
     title: "User Management",
@@ -61,6 +62,6 @@ export const sidebarData = [
     icon: <BiSolidSchool />,
     whiteIcon: <BiSolidSchool />,
     link: "/app/add-school",
-      roles: ["admin"],
+    roles: ["admin"],
   },
 ];
