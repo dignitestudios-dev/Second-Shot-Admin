@@ -141,13 +141,13 @@ const CreateNotification = () => {
             onChange={() => setUseConditional(!useConditional)}
           />
           <label htmlFor="conditional">
-            Send to specific school, hobby, sport or career
+            Send to specific school
           </label>
         </div>
 
         {useConditional && (
           <div className="space-y-4">
-            {/* <div>
+            <div>
               <label className="font-[500] text-[14px]">School</label>
               <select
                 onChange={(e) => setSelectedSchool(e.target.value)}
@@ -160,8 +160,8 @@ const CreateNotification = () => {
                   </option>
                 ))}
               </select>
-            </div> */}
-            <div>
+            </div>
+            {/* <div>
               <label className="font-[500] text-[14px]">Sport</label>
               <select
                 onChange={(e) => setSelectedSport(e.target.value)}
@@ -172,12 +172,12 @@ const CreateNotification = () => {
                   <option key={sport._id} value={sport._id}>
                     {" "}
                     {console.log(sport, "sport")}
-                    {/* id send */}
+                    
                     {sport?.sport_name}
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
 
             {/* <div>
               <label className="font-[500] text-[14px]">Careers</label>
