@@ -120,7 +120,7 @@ const AccessCodeTable = () => {
           />
         </div>
       </div>
-      {activeTab === "active" && (
+      {/* {activeTab === "active" && (
         <div className="flex justify-end  mt-4">
           <div className=" w-[250px]  mt-4">
             <Button
@@ -130,7 +130,7 @@ const AccessCodeTable = () => {
             />
           </div>
         </div>
-      )}
+      )} */}
 
       {/* 🔹 Tabs Section */}
       <div className="flex gap-6 mt-6 border-b border-gray-200">
