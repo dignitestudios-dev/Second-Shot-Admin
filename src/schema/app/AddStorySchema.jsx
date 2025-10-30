@@ -39,4 +39,11 @@ export const AddStorySchema = Yup.object({
     .url("YouTube link must be a valid URL")
     .min(3, "YouTube link must be at least 3 characters")
     .max(250, "YouTube link must not exceed 250 characters"),
+    school: Yup.string().required("School is required"),
+  sports: Yup.array()
+    .min(1, "At least one sport must be selected")
+    .required("Sports are required"),
+  career_recommendations: Yup.array()
+    .min(1, "At least one career must be selected")
+    .required("Career is required"),
 });

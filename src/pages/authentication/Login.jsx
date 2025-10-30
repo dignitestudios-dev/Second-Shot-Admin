@@ -25,7 +25,6 @@ const Login = () => {
           password: values?.password,
         };
         postData("/api/auth/admin/login", false, null, data, processLogin);
-        
       },
     });
 

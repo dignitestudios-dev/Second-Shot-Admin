@@ -9,18 +9,21 @@ import { AddStoryValues } from "../../../init/authentication/AddStoryValues";
 import { AddStorySchema } from "../../../schema/app/AddStorySchema";
 import { useSuccessStory } from "../../../hooks/api/Post";
 import { processSuccessStory } from "../../../lib/utils";
-import { useGetSuccess } from "../../../hooks/api/Get";
+import { useGetSuccess, useUsers } from "../../../hooks/api/Get";
 
 const AddStoryModal = ({ showModal, handleClose, setOpen, setUpdate }) => {
   const { loading, postData } = useSuccessStory();
   const [previewImage, setPreviewImage] = useState(null);
+  const [selectedSchool, setSelectedSchool] = useState("");
+
   const {
     data,
     loading: loader,
     pagination,
   } = useGetSuccess(`/api/admin/career-list`);
-  const { data: schoolData } = useGetSuccess(`/api/services/get-sports`);
-
+  const { data: sportData } = useGetSuccess(`/api/services/get-sports`);
+  const { data: schoolsData, loading: schoolsLoading } =
+    useUsers(`/api/admin/schools`);
   const {
     values,
     handleBlur,
@@ -183,16 +186,28 @@ const AddStoryModal = ({ showModal, handleClose, setOpen, setUpdate }) => {
                 </div>
                 <div>
                   <div className="mt-4">
-                    <Input
-                      value={values.school}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      id={"school"}
-                      name={"school"}
-                      text={"School"}
-                      placeholder={"School"}
-                      error={errors.school}
-                    />
+                    <div>
+                      <label className="font-[500] text-[14px]">School</label>
+                      <select
+                        name="school"
+                        value={values.school}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+                      >
+                        <option value="">None</option>
+                        {schoolsData?.map((school) => (
+                          <option key={school.id} value={school.name}>
+                            {school.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.school && touched.school && (
+                        <div className="text-red-500 text-sm mt-1">
+                          {errors.school}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="mt-4">
                     <label
@@ -238,7 +253,7 @@ const AddStoryModal = ({ showModal, handleClose, setOpen, setUpdate }) => {
                     {/* Dropdown options */}
                     {values?.sportsDropdownOpen && (
                       <div className="mt-1 w-full max-h-48 overflow-auto bg-white border border-gray-300 rounded-lg shadow-lg">
-                        {schoolData?.data?.map((item) => (
+                        {sportData?.data?.map((item) => (
                           <label
                             key={item._id}
                             className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
@@ -284,6 +299,11 @@ const AddStoryModal = ({ showModal, handleClose, setOpen, setUpdate }) => {
                             {name}
                           </span>
                         ))}
+                      </div>
+                    )}
+                    {errors.sports && touched.sports && (
+                      <div className="text-red-500 text-sm mt-1">
+                        {errors.sports}
                       </div>
                     )}
                   </div>
@@ -382,6 +402,10 @@ const AddStoryModal = ({ showModal, handleClose, setOpen, setUpdate }) => {
                         })}
                       </div>
                     )}
+                    {errors.career_recommendations && touched.career_recommendations && (
+  <div className="text-red-500 text-sm mt-1">{errors.career_recommendations}</div>
+)}
+
                   </div>
 
                   <div>

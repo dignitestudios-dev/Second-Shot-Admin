@@ -11,7 +11,16 @@ export const processLogin = (data, navigate, loginAuth) => {
   if (data?.success) {
     loginAuth(data);
     SuccessToast(data?.message);
-    navigate("/app/home");
+    const role = data?.data?.role;
+
+    if (role === "sub-admin") {
+      // Agar su-admin hai, navigate mat karo
+      navigate("/app/users");
+    } else {
+      navigate("/app/home");
+    }
+
+    // ✅ Baaki users ko home bhej do
     return;
   }
 };
@@ -97,7 +106,7 @@ export const processNotification = (data, navigate, resetForm) => {
     return;
   }
 };
-export const processSuccessStory = (data, setOpen, setUpdate,resetForm) => {
+export const processSuccessStory = (data, setOpen, setUpdate, resetForm) => {
   if (data?.message) {
     SuccessToast(data?.message);
     setOpen(false);

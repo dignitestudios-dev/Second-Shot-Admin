@@ -9,7 +9,7 @@ import { AddStoryValues } from "../../../init/authentication/AddStoryValues";
 import { processSuccessStory } from "../../../lib/utils";
 import { useEditSuccessStory, useSuccessStory } from "../../../hooks/api/Post";
 import * as Yup from "yup";
-import { useGetSuccess } from "../../../hooks/api/Get";
+import { useGetSuccess, useUsers } from "../../../hooks/api/Get";
 const EditStoryModal = ({
   showModal,
   handleClose,
@@ -26,7 +26,8 @@ const EditStoryModal = ({
   } = useGetSuccess(`/api/admin/career-list`);
   const { data: schoolData } = useGetSuccess(`/api/services/get-sports`);
   const [initialValues, setInitialValues] = useState(AddStoryValues);
-
+  const { data: schoolsData, loading: schoolsLoading } =
+    useUsers(`/api/admin/schools`);
   useEffect(() => {
     if (data) {
       setInitialValues({
@@ -61,47 +62,45 @@ const EditStoryModal = ({
     enableReinitialize: true, // ✅ IMPORTANT
     initialValues: initialValues,
     validationSchema: Yup.object({
-      uploadPicture: previewImage
-        ? Yup.mixed() // If preview exists, don't require again
-        : Yup.mixed()
-            .required("Picture is required")
-            .test("fileType", "Unsupported file type", (value) => {
-              if (!value) return false;
-              return ["image/jpeg", "image/png", "image/gif"].includes(
-                value.type
-              );
-            }),
+  uploadPicture: previewImage
+    ? Yup.mixed()
+    : Yup.mixed()
+        .required("Picture is required")
+        .test("fileType", "Unsupported file type", (value) => {
+          if (!value) return false;
+          return ["image/jpeg", "image/png", "image/gif"].includes(value.type);
+        }),
 
-      fullname: Yup.string().required("Full name is required").min(3).max(250),
-      sport: Yup.array()
-        .of(Yup.string().required())
-        .min(1, "At least one sport is required")
-        .required("Sport is required"),
+  fullname: Yup.string().required("Full name is required").min(3).max(250),
 
-      quote: Yup.string().required("Quote is required").min(3).max(250),
+  firstShot: Yup.string().required("First Shot is required").min(3).max(250),
+  secondShot: Yup.string().required("Second Shot is required").min(3).max(250),
 
-      firstShot: Yup.string()
-        .required("First Shot is required")
-        .min(3)
-        .max(250),
+  quote: Yup.string().required("Quote is required").min(3).max(250),
 
-      secondShot: Yup.string()
-        .required("Second Shot is required")
-        .min(3)
-        .max(250),
+  linkedin_link: Yup.string()
+    .required("LinkedIn link is required")
+    .url("LinkedIn link must be a valid URL")
+    .min(3)
+    .max(250),
 
-      linkedin_link: Yup.string()
-        .required("LinkedIn link is required")
-        .url("LinkedIn link must be a valid URL")
-        .min(3)
-        .max(250),
+  youTubelink: Yup.string()
+    .required("YouTube link is required")
+    .url("YouTube link must be a valid URL")
+    .min(3)
+    .max(250),
 
-      youTubelink: Yup.string()
-        .required("YouTube link is required")
-        .url("YouTube link must be a valid URL")
-        .min(3)
-        .max(250),
-    }),
+  school: Yup.string().required("School is required"),
+  sport: Yup.array()
+    .of(Yup.string().required())
+    .min(1, "At least one sport is required")
+    .required("Sport is required"),
+
+  career_recommendations: Yup.array()
+    .min(1, "At least one career must be selected")
+    .required("Career is required"),
+}),
+
     validateOnChange: true,
     validateOnBlur: true,
 
@@ -250,17 +249,29 @@ const EditStoryModal = ({
                 </div>
 
                 <div>
-                   <div className="mt-4">
-                    <Input
-                      value={values.school}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      id={"school"}
-                      name={"school"}
-                      text={"School"}
-                      placeholder={"School"}
-                      error={errors.school}
-                    />
+                  <div className="mt-4">
+                    <div>
+                      <label className="font-[500] text-[14px]">School</label>
+                      <select
+                        name="school"
+                        value={values.school}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="border border-gray-300 rounded-lg w-full p-2 text-sm"
+                      >
+                        <option value="">None</option>
+                        {schoolsData?.map((school) => (
+                          <option key={school.id} value={school.name}>
+                            {school.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.school && touched.school && (
+                        <div className="text-red-500 text-sm mt-1">
+                          {errors.school}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="mt-1">
                     <label
@@ -453,7 +464,7 @@ const EditStoryModal = ({
                       </div>
                     )}
                   </div>
-                 
+
                   <div>
                     <div className="mt-4">
                       <TextArea
