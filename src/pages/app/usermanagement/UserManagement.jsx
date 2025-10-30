@@ -10,7 +10,7 @@ import { ErrorToast, SuccessToast } from "../../../components/global/Toaster";
 import axios from "../../../axios";
 import { AuthContext } from "../../../context/AuthContext";
 const UserManagement = () => {
-  const { school } = useContext(AuthContext);
+  const { school, role } = useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [update, setUpdate] = useState(false);
@@ -156,33 +156,37 @@ const UserManagement = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-          {usageCards?.map((item) => (
-            <div
-              key={item.key}
-              className="bg-white rounded-[20px] h-[100px] flex items-center px-5 shadow-sm"
-            >
+        {role === "sub-admin" ? (
+          <></>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+            {usageCards?.map((item) => (
               <div
-                className={`h-[44px] w-[44px] rounded-[12px] flex items-center justify-center ${item.bg}`}
+                key={item.key}
+                className="bg-white rounded-[20px] h-[100px] flex items-center px-5 shadow-sm"
               >
-                {item.icon}
-              </div>
+                <div
+                  className={`h-[44px] w-[44px] rounded-[12px] flex items-center justify-center ${item.bg}`}
+                >
+                  {item.icon}
+                </div>
 
-              <div className="ml-4 flex flex-col">
-                {item.loading ? (
-                  <div className="h-[20px] w-[50px] bg-gray-200 rounded-md animate-pulse"></div>
-                ) : (
-                  <h1 className="text-[18px] font-[600] text-[#202224]">
-                    {item.value ?? 0}
-                  </h1>
-                )}
-                <p className="text-[13px] text-[#0A150F80] mt-1">
-                  {item.label}
-                </p>
+                <div className="ml-4 flex flex-col">
+                  {item.loading ? (
+                    <div className="h-[20px] w-[50px] bg-gray-200 rounded-md animate-pulse"></div>
+                  ) : (
+                    <h1 className="text-[18px] font-[600] text-[#202224]">
+                      {item.value ?? 0}
+                    </h1>
+                  )}
+                  <p className="text-[13px] text-[#0A150F80] mt-1">
+                    {item.label}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
         <UsersTable
           users={data?.users}
           setCurrentPage={setCurrentPage}

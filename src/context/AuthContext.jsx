@@ -74,6 +74,7 @@ const AuthProvider = ({ children }) => {
         role,
         setResendTime,
         school,
+        
       }}
     >
       {children}
