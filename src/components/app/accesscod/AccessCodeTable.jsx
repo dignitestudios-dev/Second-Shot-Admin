@@ -195,12 +195,13 @@ const AccessCodeTable = () => {
                           {item?.is_expired ? "Expired" : "Active"}
                         </span>
                       </td>
-                      <td className="px-4 py-3 font-medium text-[#202224]">
-                        {getDateFormat(item?.access_code_end )}
-                      </td>
-                      <td className="px-4 py-3 font-medium text-[#202224]">
-                        {getDateFormat(item?.access_code_start )}
-                      </td>
+                   <td className="px-4 py-3 font-medium text-[#202224]">
+  {item?.access_code_end ? getDateFormat(item.access_code_end) : "Not Activated"}
+</td>
+<td className="px-4 py-3 font-medium text-[#202224]">
+  {item?.access_code_start ? getDateFormat(item.access_code_start) : "Not Activated"}
+</td>
+
                     </tr>
                   ))}
                 </tbody>
