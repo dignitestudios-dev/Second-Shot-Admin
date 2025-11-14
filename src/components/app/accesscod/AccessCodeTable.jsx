@@ -9,6 +9,7 @@ import Button from "../../global/Button";
 import AccessCodeModal from "./AccessCodeModal";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getDateFormat } from "../../../lib/helpers";
 
 const AccessCodeTable = () => {
   const [accessloader, setAccessLoading] = useState(false);
@@ -91,8 +92,8 @@ const AccessCodeTable = () => {
   // ✅ Filter Codes Based on Active Tab
   const filteredCodes =
     activeTab === "active"
-      ? data?.accessCodes?.filter((item) => !item.is_used)
-      : data?.accessCodes?.filter((item) => item.is_used);
+      ? data?.accessCodes?.filter((item) => !item.is_expired)
+      : data?.accessCodes?.filter((item) => item.is_expired);
 
   return (
     <>
@@ -162,7 +163,7 @@ const AccessCodeTable = () => {
               <table className="w-full text-[14px] font-[400] text-left">
                 <thead className="text-[14px] text-[#202224] bg-[#FCFDFD] border-y border-gray-200">
                   <tr>
-                    {["#", "Access Code", "Status"].map((header, index) => (
+                    {["#", "Access Code", "Status","Start Date","End Date"].map((header, index) => (
                       <th key={index} className="px-4 font-[500] py-3">
                         {header}
                       </th>
@@ -182,16 +183,23 @@ const AccessCodeTable = () => {
                       <td className="px-4 py-3 font-medium text-[#202224]">
                         {item?.code}
                       </td>
+
                       <td className="px-4 py-3">
                         <span
                           className={`px-3 py-1 rounded-full text-[12px] font-semibold ${
-                            item?.is_used
+                            item?.is_expired
                               ? "bg-red-100 text-red-700"
                               : "bg-green-100 text-green-700"
                           }`}
                         >
-                          {item?.is_used ? "Expired" : "Active"}
+                          {item?.is_expired ? "Expired" : "Active"}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 font-medium text-[#202224]">
+                        {getDateFormat(item?.access_code_end )}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-[#202224]">
+                        {getDateFormat(item?.access_code_start )}
                       </td>
                     </tr>
                   ))}

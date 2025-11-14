@@ -5,7 +5,7 @@ import { SearchIcon } from "../../../assets/export";
 import GoalsCard from "../../../components/app/usermanagement/Goals";
 import CarrersCards from "../../../components/app/usermanagement/CarrersCards";
 import ResumeFile from "../../../components/app/usermanagement/ResumeFile";
-import { phoneFormater } from "../../../lib/helpers";
+import { getDateFormat, phoneFormater } from "../../../lib/helpers";
 import { useUserDetails, useUsers } from "../../../hooks/api/Get";
 import TransferableSkill from "../../../components/app/usermanagement/TransferableSkill";
 import { TranfserableSkeleton } from "../../../components/global/Skeleton";
@@ -138,16 +138,13 @@ const UserDetail = () => {
           <div>
             <p className="text-[#565656] text-[16px] ">Subscription</p>
             <p className="text-[16px] font-medium text-[#0F0F0F] text-wrap">
-             {
-  user?.current_subscription_plan === "yearly_plan"
-    ? "Yearly"
-    : user?.current_subscription_plan === "3-month"
-    ? "Quarterly"
-    : user?.current_subscription_plan === "access-code"
-    ? "Purchased Using Access Code"
-    : ""
-}
-
+              {user?.current_subscription_plan === "yearly_plan"
+                ? "Yearly"
+                : user?.current_subscription_plan === "3-month"
+                ? "Quarterly"
+                : user?.current_subscription_plan === "access-code"
+                ? "Purchased Using Access Code"
+                : ""}
             </p>
           </div>
         </div>
