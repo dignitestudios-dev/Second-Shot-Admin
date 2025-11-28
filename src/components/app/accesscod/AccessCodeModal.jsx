@@ -6,7 +6,8 @@ import jsPDF from "jspdf";
 
 const AccessCodeModal = ({ showModal, handleClose, accessCode }) => {
   const [copiedIndex, setCopiedIndex] = useState(null);
-  const [downloading, setDownloading] = useState(false);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
+  const [downloadingCSV, setDownloadingCSV] = useState(false);
 
   const handleCopy = async (code, index) => {
     try {
@@ -20,7 +21,7 @@ const AccessCodeModal = ({ showModal, handleClose, accessCode }) => {
 
   const handleDownloadPDF = () => {
     try {
-      setDownloading(true);
+      setDownloadingPDF(true);
       const doc = new jsPDF();
       doc.setFontSize(16);
       doc.text("Access Codes", 20, 20);
@@ -34,7 +35,28 @@ const AccessCodeModal = ({ showModal, handleClose, accessCode }) => {
     } catch (err) {
       console.error("PDF download failed:", err);
     } finally {
-      setDownloading(false);
+      setDownloadingPDF(false);
+    }
+  };
+
+  const handleDownloadCSV = () => {
+    try {
+      setDownloadingCSV(true);
+      const csvContent =
+        "data:text/csv;charset=utf-8," +
+        accessCode?.map((code) => `"${code}"`).join("\n");
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "Access_Codes.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error("CSV download failed:", err);
+    } finally {
+      setDownloadingCSV(false);
     }
   };
 
@@ -52,19 +74,32 @@ const AccessCodeModal = ({ showModal, handleClose, accessCode }) => {
           <div className="flex flex-col items-center justify-center space-y-4">
             <h2 className="text-[20px] font-[600] text-[#181818]">Access Codes</h2>
 
-            {/* 🧾 Download PDF Button */}
-            <button
-              onClick={handleDownloadPDF}
-              disabled={downloading}
-              className={`flex items-center gap-2 bg-[#6440FB] hover:bg-[#5236cc] text-white px-4 py-2 rounded-md font-medium transition ${
-                downloading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              <LuDownload size={18} />
-              {downloading ? "Downloading..." : "Download PDF"}
-            </button>
+            {/* 🧾 Download Buttons */}
+            <div className="flex gap-4">
+              <button
+                onClick={handleDownloadPDF}
+                disabled={downloadingPDF}
+                className={`flex items-center gap-2 bg-[#6440FB] hover:bg-[#5236cc] text-white px-4 py-2 rounded-md font-medium transition ${
+                  downloadingPDF ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                <LuDownload size={18} />
+                {downloadingPDF ? "Downloading PDF..." : "Download PDF"}
+              </button>
 
-            <div className="flex flex-col gap-3 w-full">
+              <button
+                onClick={handleDownloadCSV}
+                disabled={downloadingCSV}
+                className={`flex items-center gap-2 bg-[#22c55e] hover:bg-[#16a34a] text-white px-4 py-2 rounded-md font-medium transition ${
+                  downloadingCSV ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                <LuDownload size={18} />
+                {downloadingCSV ? "Downloading CSV..." : "Download CSV"}
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-3 w-full mt-4">
               {accessCode?.map((code, index) => (
                 <div
                   key={index}
