@@ -142,11 +142,10 @@ const AccessCodeTable = () => {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
-              activeTab === tab.key
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-gray-500 hover:text-blue-500"
-            }`}
+            className={`pb-2 text-sm font-medium transition-colors border-b-2 ${activeTab === tab.key
+              ? "border-blue-600 text-blue-600"
+              : "border-transparent text-gray-500 hover:text-blue-500"
+              }`}
           >
             {tab.label}
           </button>
@@ -163,7 +162,7 @@ const AccessCodeTable = () => {
               <table className="w-full text-[14px] font-[400] text-left">
                 <thead className="text-[14px] text-[#202224] bg-[#FCFDFD] border-y border-gray-200">
                   <tr>
-                    {["#", "Access Code", "Status","Start Date","End Date"].map((header, index) => (
+                    {["#", "Access Code", "Status", "Start Date", "End Date"].map((header, index) => (
                       <th key={index} className="px-4 font-[500] py-3">
                         {header}
                       </th>
@@ -186,21 +185,20 @@ const AccessCodeTable = () => {
 
                       <td className="px-4 py-3">
                         <span
-                          className={`px-3 py-1 rounded-full text-[12px] font-semibold ${
-                            item?.is_expired
-                              ? "bg-red-100 text-red-700"
-                              : "bg-green-100 text-green-700"
-                          }`}
+                          className={`px-3 py-1 rounded-full text-[12px] font-semibold ${item?.is_expired
+                            ? "bg-red-100 text-red-700"
+                            : "bg-green-100 text-green-700"
+                            }`}
                         >
                           {item?.is_expired ? "Expired" : "Active"}
                         </span>
                       </td>
-                   <td className="px-4 py-3 font-medium text-[#202224]">
-  {item?.access_code_end ? getDateFormat(item.access_code_end) : "Not Activated"}
-</td>
-<td className="px-4 py-3 font-medium text-[#202224]">
-  {item?.access_code_start ? getDateFormat(item.access_code_start) : "Not Activated"}
-</td>
+                      <td className="px-4 py-3 font-medium text-[#202224]">
+                        {item?.access_code_start ? getDateFormat(item.access_code_start) : "Not Activated"}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-[#202224]">
+                        {item?.access_code_end ? getDateFormat(item.access_code_end) : "Not Activated"}
+                      </td>
 
                     </tr>
                   ))}
